@@ -1,28 +1,13 @@
-html, body, #root {
-  height: 100%;
-  margin: 0;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-#root {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #f3f4f6;
-}
+html, body, #root { height: 100%; margin: 0; }
+#root { min-height: 100vh; display:flex; justify-content:center; align-items:center; background:#f3f4f6; }
 
+/* (선택) 모바일 프레임을 CSS로 둔다면 */
 .mobile-frame {
-  width: 390px;
-  height: 844px;
-  overflow: auto;
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 8px 24px rgba(0,0,0,.08);
-  padding: 16px;
-  box-sizing: border-box;
-}
-
-.scale-80 {
-  transform: scale(0.8);
-  transform-origin: center center;
+  width: 390px; height: 844px; overflow:auto; background:#fff;
+  border: 1px solid #e5e7eb; box-shadow: 0 8px 24px rgba(0,0,0,.08);
+  padding: 16px; box-sizing: border-box;
 }
