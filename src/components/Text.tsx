@@ -8,19 +8,19 @@ interface TextProps {
 
 function Text({ children, variant, className }: TextProps) {
     const styles = {
-        Sem20: 'font-semibold text-20 tracking-[-2.5%] leading-[140%]',
-        Sem18: 'font-semibold text-18 tracking-[-2.5%] leading-[140%]',
-        Sem16: 'font-semibold text-16 tracking-[-2.5%] leading-[140%]',
-        Sem14: 'font-semibold text-14 tracking-[-2.5%] leading-[140%]',
-        Sem12: 'font-semibold text-12 tracking-[-2.5%] leading-[140%]',
-        Med16: 'font-medium text-16 tracking-[-2.5%] leading-[140%]',
-        Med14: 'font-medium text-14 tracking-[-2.5%] leading-[140%]',
-        Med12: 'font-medium text-12 tracking-[-2.5%] leading-[140%]',
-        Reg16: 'font-regular text-16 tracking-[-2.5%] leading-[140%]',
-        Reg14: 'font-regular text-14 tracking-[-2.5%] leading-[140%]',
-        Reg12: 'font-regular text-12 tracking-[-2.5%] leading-[140%]',
-        Reg10: 'font-regular text-10 tracking-[-2.5%] leading-[140%]',
-        Reg8: 'font-regular text-8 tracking-[-2.5%] leading-[140%]',
+        Sem20: 'font-semibold text-[20px] tracking-[-2.5%] leading-[140%]',
+        Sem18: 'font-semibold text-[18px] tracking-[-2.5%] leading-[140%]',
+        Sem16: 'font-semibold text-[16px] tracking-[-2.5%] leading-[140%]',
+        Sem14: 'font-semibold text-[14px] tracking-[-2.5%] leading-[140%]',
+        Sem12: 'font-semibold text-[12px] tracking-[-2.5%] leading-[140%]',
+        Med16: 'font-medium text-[16px] tracking-[-2.5%] leading-[140%]',
+        Med14: 'font-medium text-[14px] tracking-[-2.5%] leading-[140%]',
+        Med12: 'font-medium text-[12px] tracking-[-2.5%] leading-[140%]',
+        Reg16: 'font-normal text-[16px] tracking-[-2.5%] leading-[140%]',
+        Reg14: 'font-normal text-[14px] tracking-[-2.5%] leading-[140%]',
+        Reg12: 'font-normal text-[12px] tracking-[-2.5%] leading-[140%]',
+        Reg10: 'font-normal text-[10px] tracking-[-2.5%] leading-[140%]',
+        Reg8: 'font-normal text-[8px] tracking-[-2.5%] leading-[140%]',
     };
 
     const variantStyle = styles[variant] || styles.Reg14; // 혹시 모를 오류 방지를 위해 기본값 한번 더 확인
