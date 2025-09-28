@@ -21,8 +21,12 @@ function Text({ children, variant, className }: TextProps) {
         Reg12: 'font-regular text-12 tracking-[-2.5%] leading-[140%]',
         Reg10: 'font-regular text-10 tracking-[-2.5%] leading-[140%]',
         Reg8: 'font-regular text-8 tracking-[-2.5%] leading-[140%]',
-    }
-    return <p className={`${styles[variant]} ${className}`}>{children}</p>;
+    };
+
+    const variantStyle = styles[variant] || styles.Reg14; // 혹시 모를 오류 방지를 위해 기본값 한번 더 확인
+    const combinedClassName = `${variantStyle} ${className || ''}`.trim();
+    
+    return <p className={combinedClassName}>{children}</p>;
 }
 
 export default Text;
