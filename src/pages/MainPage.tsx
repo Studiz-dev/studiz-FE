@@ -9,7 +9,7 @@ export default function MainPage() {
   const [show, setShow] = useState(false);
   const isDisabled = id.trim() === "" || pw.trim() === "";
 
-   const onSubmit = (e) => {
+  const onSubmit = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isDisabled) return;
     console.log({ id, pw });
