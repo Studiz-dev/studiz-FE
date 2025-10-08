@@ -1,5 +1,7 @@
 import { useState } from "react";
 import logo from '../assets/logo.svg'
+import open from '../assets/open.svg'
+import close from '../assets/close.svg'
 
 export default function MainPage() {
   const [id, setId] = useState("");
@@ -7,21 +9,21 @@ export default function MainPage() {
   const [show, setShow] = useState(false);
   const isDisabled = id.trim() === "" || pw.trim() === "";
 
-   const onSubmit = (e) => {
+   const onSubmit = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isDisabled) return;
     console.log({ id, pw });
   };
 
   return (
-    <div className="flex flex-col items-center justify-center pt-36">
+    <div className="flex flex-col items-center justify-center pt-[180px]">
       <img src={logo} alt="Logo" className="w-[180px] h-auto" />
       <div className="w-full flex items-start justify-center bg-white">
       <form
         onSubmit={onSubmit}
         className="w-full px-3 pt-20 pb-10">
         {/* 아이디 */}
-        <label className="block font-medium text-gray4 mb-2">아이디</label>
+        <label className="block font-medium text-base text-gray4 mb-2">아이디</label>
         <input
           type="text"
           value={id}
@@ -31,19 +33,19 @@ export default function MainPage() {
             w-full h-12 rounded-lg border-2
             border-main1 focus:border-point
             bg-white px-4 py-3 outline-none
-            placeholder:text-gray4 font-normal
+            placeholder:text-gray4 font-normal text-sm
             transition
           "/>
 
         {/* 비밀번호 */}
-        <label className="block font-medium text-gray4 mt-6 mb-2">
+        <label className="block font-medium text-base text-gray4 mt-6 mb-2">
           비밀번호
         </label>
         <div
           className="
             w-full h-12 rounded-lg border-2
             border-main1 focus-within:border-point
-            bg-white flex items-center
+            bg-white flex items-center text-sm
             px-4 py-3
             transition
           "
@@ -65,17 +67,10 @@ export default function MainPage() {
             {/* 눈/가림 아이콘 (SVG) */}
             {show ? (
               // eye
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" stroke="#285943" strokeWidth="1.8" />
-                <circle cx="12" cy="12" r="3.2" stroke="#285943" strokeWidth="1.8" />
-              </svg>
+              <img src={open} alt="Open" className="w-[24px] h-auto translate-x-2"/>
             ) : (
               // eye-off
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <path d="M3 3l18 18" stroke="#285943" strokeWidth="1.8"/>
-                <path d="M2 12s3.5-6 10-6c2.2 0 4 .6 5.5 1.5M22 12s-3.5 6-10 6c-2.2 0-4-.6-5.5-1.5" stroke="#285943" strokeWidth="1.8"/>
-                <path d="M9.9 9.9A3.2 3.2 0 0012 15.2c.6 0 1.1-.2 1.6-.4" stroke="#285943" strokeWidth="1.8"/>
-              </svg>
+              <img src={close} alt="Close" className="w-[22px] h-auto translate-x-1.5"/>
             )}
           </button>
         </div>
@@ -95,9 +90,9 @@ export default function MainPage() {
         </button>
 
         {/* 가입 링크 */}
-        <p className="mt-8 text-center text-Med14 text-gray4">
+        <p className="mt-8 text-center text-sm text-gray4">
           아직 계정이 없으신가요?{" "}
-          <a href="/sign1" className="text-point text-Med14 underline-offset-2 hover:underline">
+          <a href="/sign1" className="text-point text-sm font-semibold underline-offset-2 hover:underline">
             회원가입하기
           </a>
         </p>

@@ -1,5 +1,4 @@
-import Text from '../components/Text';
-import CheckIcon from '../icons/check-icon.svg';
+/*import CheckIcon from '../icons/check-icon.svg';
 
 export default function DonePage() {
   return (
@@ -44,4 +43,8 @@ export default function DonePage() {
     </footer>
   </div>
   );
+}*/
+
+export default function DonePage() {
+  return <div style={{ padding: 24 }}>DonePage</div>
 }
