@@ -1,50 +1,35 @@
-/*import CheckIcon from '../icons/check-icon.svg';
+import { useNavigate } from 'react-router-dom';
+import CheckIcon from '../assets/check-icon.svg';
 
 export default function DonePage() {
+  const navigate = useNavigate();
+
   return (
- <div>
-    <header className="pt-[61.5px]">
-      <Text
-        variant="Sem18"
-        className="text-black1 text-center"
-      >
+    <div className="flex flex-col items-center justify-center mt-[100px]">
+      <div className="flex items-center justify-center font-semibold text-[18px] text-black1 h-[60px]">
         가입 완료
-      </Text>
-    </header>
-
-    <main className="flex flex-col items-center justify-center"> 
-      <img src={CheckIcon} alt="체크 아이콘" width={96} height={96} className="mt-[223.5px]" />
-      <Text
-        variant="Sem18"
-        className="text-black1 mt-5"
-      >
-        <p>회원가입이 완료되었습니다.</p>
-      </Text>
-      <Text
-        variant="Med14"
-        className="text-gray3 mt-2"
-      >
-        <p>시작하기를 눌러 스터디즈를 이용해 보세요!</p>
-      </Text>
-    </main>
-
-    <footer className="w-full pt-[249px] ">
-      <button
+      </div>
+      <div className="flex flex-col items-center justify-center gap-5 mt-40">
+        <img src={CheckIcon} alt="CheckIcon" className="w-[96px] h-auto" />
+        <div className="flex flex-col items-center justify-center gap-2">
+          <div className="font-semibold text-[18px] text-black1">
+            회원가입이 완료되었습니다.
+          </div>
+          <div className="font-medium text-[14px] text-gray3">
+            시작하기를 눌러 스터디즈를 이용해 보세요!
+          </div>
+        </div>
+      </div>
+      <div className="flex items-center justify-center w-full h-21 mt-48">
+        <button
         type="button"
-        className="w-full py-3 rounded-lg bg-point"
-      >
-        <Text
-          variant="Sem18"
-          className="text-white1"
+        onClick={() => navigate('/home')}
+        className="
+        w-full h-12 rounded-lg text-white text-[18px] font-semibold bg-point hover:bg-[#4C6953] transition"
         >
           시작하기
-        </Text>
-      </button>
-    </footer>
-  </div>
+        </button>
+      </div>
+    </div>    
   );
-}*/
-
-export default function DonePage() {
-  return <div style={{ padding: 24 }}>DonePage</div>
 }
