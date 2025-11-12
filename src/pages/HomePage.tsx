@@ -1,19 +1,19 @@
-import UpcomingSchedule from './UpcomingSchedule';
-import TodoList from './TodoList';
+import UpcomingSchedule from '../components/UpcomingSchedule'; 
+import TodoList from '../components/TodoList';
 
 export default function HomePage() {
   return (
-    // 연두색 배경(#F9FFF6)과 패딩(p-4) 적용
-    <div className="min-h-screen bg-[#F9FFF6] p-4">
+    // [핵심 수정!]
+    // 'min-h-screen' 클래스를 반드시 제거해야
+    // App.tsx의 'overflow-y-auto' 스크롤이 정상 작동합니다.
+    <div className="bg-[#F9FFF6] p-4">
       
-      {/* 두 컴포넌트를 수직(flex-col)으로 간격(gap-4)을 두고 배치 */}
+      {/* 이 부분은 완벽합니다. */}
       <div className="flex flex-col gap-4">
-        
         <UpcomingSchedule />
-        
         <TodoList />
-
       </div>
+
     </div>
   );
 }

@@ -1,14 +1,13 @@
 import { useState } from 'react';
-import { todoGroups as initialTodoGroups, type TodoGroup } from './DummyData';
+// [경로 유지!] ../pages/DummyData
+import { todoGroups as initialTodoGroups, type TodoGroup } from '../pages/DummyData';
 
-// 1. [변경!] 'src' 폴더에 있는 'CheckBox.svg'를 정확히 import 합니다.
-// (pages 폴더에서 src 폴더로 가려면 '..'를 두 번 씁니다)
+// [경로 유지!] ../assets/CheckBox.svg?react
 import CheckBox from '../assets/CheckBox.svg?react'; 
 
 export default function TodoList() {
   const [todoGroups, setTodoGroups] = useState<TodoGroup[]>(initialTodoGroups);
 
-  // (handleCheckToggle 함수는 완벽하므로 그대로 둡니다)
   const handleCheckToggle = (groupId: number, todoId: number) => {
     setTodoGroups((prevGroups) =>
       prevGroups.map((group) => {
@@ -29,7 +28,10 @@ export default function TodoList() {
   };
 
   return (
-    <section className="bg-white rounded-xl shadow-md p-4">
+    // [수정!]
+    // 'shadow-md' 삭제
+    // 'border-[1.5px] border-[#DDF6D2]' (요청하신 색상) 추가
+    <section className="bg-white rounded-xl border-[1.5px] border-[#DDF6D2] p-4">
       <h2 className="text-lg font-bold mb-4">To-Do</h2>
 
       {todoGroups.map((group) => (
@@ -46,10 +48,6 @@ export default function TodoList() {
             >
               <div className="flex items-center gap-2">
                 
-                {/* --- [핵심 수정!] ---
-                  'div'로 감싸던 모든 코드를 삭제하고,
-                  'CheckBox' 컴포넌트 하나만 사용합니다.
-                */}
                 <CheckBox
                   className={`
                     w-5 h-5 flex-shrink-0 
