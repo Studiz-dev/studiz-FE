@@ -13,7 +13,11 @@ import BottomNav from './components/BottomNav'
 export default function App() {
   const location = useLocation();
   const navPages = ['/Home', '/Group', '/My'];
-  const showNav = navPages.includes(location.pathname);
+
+  // [핵심 수정!]
+  // .includes() 대신 .some()과 .startsWith()를 사용해
+  // '/Home/' 처럼 끝에 '/'가 붙어도 'true'가 되도록 수정합니다.
+  const showNav = navPages.some(path => location.pathname.startsWith(path));
 
   // [복원!] 바깥 div는 Tailwind 클래스가 없는 게 맞습니다.
   // '#root'가 이미 회색 배경/가운데 정렬을 다 해주고 있습니다.
@@ -30,6 +34,7 @@ export default function App() {
           .mobile-frame의 'overflow:auto'가 스크롤을 담당합니다.
         */}
         <main className={showNav ? 'pb-16' : ''}>
+
           <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="/done" element={<DonePage />} />
@@ -44,7 +49,6 @@ export default function App() {
           </Routes>
         </main>
         
-        {/* BottomNav는 'absolute'로 'mobile-frame' 하단에 고정됩니다. (이건 맞았습니다) */}
         {showNav && <BottomNav />}
         
       </div>

@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom';
-import CheckIcon from '../assets/check-icon.svg';
+import { useNavigate } from "react-router-dom";
+import CheckIcon from "../assets/check-icon.svg";
 
 export default function DonePage() {
   const navigate = useNavigate();
@@ -22,14 +22,14 @@ export default function DonePage() {
       </div>
       <div className="flex items-center justify-center w-full h-21 mt-48">
         <button
-        type="button"
-        onClick={() => navigate('/home')}
-        className="
+          type="button"
+          onClick={() => navigate("/home")}
+          className="
         w-full h-12 rounded-lg text-white text-[18px] font-semibold bg-point hover:bg-[#4C6953] transition"
         >
           시작하기
         </button>
       </div>
-    </div>    
+    </div>
   );
 }
