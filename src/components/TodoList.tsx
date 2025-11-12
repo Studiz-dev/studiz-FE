@@ -1,8 +1,7 @@
 import { useState } from 'react';
-// [경로 유지!] ../pages/DummyData
+
 import { todoGroups as initialTodoGroups, type TodoGroup } from '../pages/DummyData';
 
-// [경로 유지!] ../assets/CheckBox.svg?react
 import CheckBox from '../assets/CheckBox.svg?react'; 
 
 export default function TodoList() {
@@ -28,17 +27,14 @@ export default function TodoList() {
   };
 
   return (
-    // [수정!]
-    // 'shadow-md' 삭제
-    // 'border-[1.5px] border-[#DDF6D2]' (요청하신 색상) 추가
-    <section className="bg-white rounded-xl border-[1.5px] border-[#DDF6D2] p-4">
-      <h2 className="text-lg font-bold mb-4">To-Do</h2>
+    <section className="bg-white rounded-xl border-[1.5px] border-main3 p-4">
+      <h2 className="text-[18px] font-bold font-black1 mb-4">To-Do</h2>
 
       {todoGroups.map((group) => (
         <div key={group.id} className="mb-4">
-          <span className="inline-block bg-[#F0F8E8] text-[#5E936C] text-xs font-semibold px-2 py-1 rounded-full mb-3">
+          <span className="inline-block bg-main4 font-black1 text-[12px] font-medium px-2 py-1 rounded-full mb-3">
             {group.groupName}
-          </span>
+          </span> 
 
           {group.todos.map((todo) => (
             <div
@@ -55,10 +51,10 @@ export default function TodoList() {
                   `}
                 />
 
-                <span className="text-gray-800">{todo.taskName}</span>
+                <span className="text-[16px] font-medium text-black1">{todo.taskName}</span>
               </div>
               
-              <span className="text-sm font-semibold text-[#5E936C]">
+              <span className="text-[16px] font-semibold text-point">
                 {todo.completedCount}/{todo.totalCount}
               </span>
             </div>

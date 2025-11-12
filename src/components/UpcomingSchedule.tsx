@@ -13,8 +13,8 @@ export default function UpcomingSchedule() {
           }`}
         >
           <div>
-            <span className="text-[14px] font-semibold text-point">{item.groupName}</span>
-            <h3 className="text-[18px] font-semibold text-black1">{item.studyName}</h3>
+            <span className="text-[14px] font-semibold text-point block mb-[2px]">{item.groupName}</span>
+            <h3 className="text-[18px] font-semibold text-black1 mb-[4px]">{item.studyName}</h3>
             <p className="text-[12px] font-medium text-gray4">{item.dateTime}</p>
           </div>
           <div>
