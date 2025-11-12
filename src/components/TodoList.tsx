@@ -1,14 +1,12 @@
 import { useState } from 'react';
-import { todoGroups as initialTodoGroups, type TodoGroup } from './DummyData';
 
-// 1. [변경!] 'src' 폴더에 있는 'CheckBox.svg'를 정확히 import 합니다.
-// (pages 폴더에서 src 폴더로 가려면 '..'를 두 번 씁니다)
+import { todoGroups as initialTodoGroups, type TodoGroup } from '../pages/DummyData';
+
 import CheckBox from '../assets/CheckBox.svg?react'; 
 
 export default function TodoList() {
   const [todoGroups, setTodoGroups] = useState<TodoGroup[]>(initialTodoGroups);
 
-  // (handleCheckToggle 함수는 완벽하므로 그대로 둡니다)
   const handleCheckToggle = (groupId: number, todoId: number) => {
     setTodoGroups((prevGroups) =>
       prevGroups.map((group) => {
@@ -29,14 +27,14 @@ export default function TodoList() {
   };
 
   return (
-    <section className="bg-white rounded-xl shadow-md p-4">
-      <h2 className="text-lg font-bold mb-4">To-Do</h2>
+    <section className="bg-white rounded-xl border-[1.5px] border-main3 p-4">
+      <h2 className="text-[18px] font-bold font-black1 mb-4">To-Do</h2>
 
       {todoGroups.map((group) => (
         <div key={group.id} className="mb-4">
-          <span className="inline-block bg-[#F0F8E8] text-[#5E936C] text-xs font-semibold px-2 py-1 rounded-full mb-3">
+          <span className="inline-block bg-main4 font-black1 text-[12px] font-medium px-2 py-1 rounded-full mb-3">
             {group.groupName}
-          </span>
+          </span> 
 
           {group.todos.map((todo) => (
             <div
@@ -46,10 +44,6 @@ export default function TodoList() {
             >
               <div className="flex items-center gap-2">
                 
-                {/* --- [핵심 수정!] ---
-                  'div'로 감싸던 모든 코드를 삭제하고,
-                  'CheckBox' 컴포넌트 하나만 사용합니다.
-                */}
                 <CheckBox
                   className={`
                     w-5 h-5 flex-shrink-0 
@@ -57,10 +51,10 @@ export default function TodoList() {
                   `}
                 />
 
-                <span className="text-gray-800">{todo.taskName}</span>
+                <span className="text-[16px] font-medium text-black1">{todo.taskName}</span>
               </div>
               
-              <span className="text-sm font-semibold text-[#5E936C]">
+              <span className="text-[16px] font-semibold text-point">
                 {todo.completedCount}/{todo.totalCount}
               </span>
             </div>
