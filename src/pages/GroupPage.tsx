@@ -7,6 +7,7 @@ interface StudyGroup {
   title: string; 
   leader: string;
   totalMembers: number;
+  currentMembers: number; // 현재 가입한 인원
 }
 
 export default function GroupPage() {
@@ -33,6 +34,7 @@ export default function GroupPage() {
       title: formData.title,
       leader: formData.leader,
       totalMembers: parseInt(formData.totalMembers) || 0,
+      currentMembers: 1, // 스터디장 포함 초기 인원
     };
     setStudyGroups([...studyGroups, newGroup]);
     setShowAddModal(false);
@@ -46,15 +48,18 @@ export default function GroupPage() {
   };
 
   return (
-    <div className="mt-[120px] relative">
+    <div
+     className="relative flex flex-col h-[844px]"
+   >
       {/* 프레임 내부 컨테이너 */}
-          <h1 className="text-lg font-semibold text-center mb-4">나의 스터디그룹</h1>
+      <h1 className="text-lg font-semibold text-center mb-8 pt-28">나의 스터디그룹</h1>
 
-        {/* 컨텐츠 영역 (HomePage와 동일한 연두색 배경, 좌우 꽉차게) */}
-        <div className="mx-[-16px] bg-[#F9FFF6] min-h-[calc(844px-120px-60px)] pb-24">
+      {/* 컨텐츠 영역 (연두색) */}
+      {/* 초록색 배경이 BottomNav(64px) 바로 위까지 가도록 설정 */}
+      <div className="bg-[#F9FFF6] flex-1 pb-16">
           {studyGroups.length === 0 ? (
             /* 빈 상태 메시지 */
-            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center text-[#9AC58B]">
+            <div className="flex flex-col items-center justify-center h-full text-center text-[#9AC58B]">
               <img src={book} alt="책 아이콘" className="w-12 h-12 mb-4" />
               <p className="text-sm font-medium">
                 아직 가입한
@@ -65,7 +70,7 @@ export default function GroupPage() {
           ) : (
             <>
               {/* 정렬 필터 */}
-              <div className="pt-4 mb-4" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+              <div className="pt-4 mb-4 px-4">
                 <button
                   onClick={() => setSortOrder(sortOrder === "최신순" ? "인기순" : "최신순")}
                   className="flex items-center gap-1 text-sm text-gray-700"
@@ -88,12 +93,12 @@ export default function GroupPage() {
                 </button>
               </div>
               {/* 스터디 그룹 목록 */}
-              <div className="overflow-y-auto max-h-[calc(844px-120px-60px-80px)]" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+              <div className="overflow-y-auto px-4 pb-4">
                 <div className="flex flex-col gap-3 items-center">
                   {studyGroups.map((group) => (
                     <div
                       key={group.id}
-                      className="bg-white rounded-lg p-4 border border-[#E8F5E3] shadow-sm w-[360px]"
+                      className="bg-white rounded-lg p-4 border border-[#E8F5E3] shadow-sm w-full"
                     >
                       <div className="text-xs text-[#9AC58B] font-medium mb-1">
                         {group.category}
@@ -103,7 +108,7 @@ export default function GroupPage() {
                       </div>
                       <div className="text-xs text-gray-500 mb-1">스터디장 {group.leader}</div>
                       <div className="text-xs text-gray-500">
-                        인원 {group.totalMembers}명
+                        인원 {group.currentMembers}/{group.totalMembers}명
                       </div>
                     </div>
                   ))}
@@ -117,7 +122,7 @@ export default function GroupPage() {
         <button
           onClick={() => setShowAddModal(true)}
           aria-label="그룹 추가"
-          className="absolute bottom-24 right-5 w-14 h-14 rounded-full bg-[#9AC58B] text-white shadow-lg
+          className="absolute bottom-28 right-4 w-14 h-14 rounded-full bg-[#9AC58B] text-white shadow-lg
                      flex items-center justify-center text-3xl font-light z-20"
         >
           +
@@ -141,7 +146,7 @@ export default function GroupPage() {
               }}
             />
             {/* 모달 컨텐츠 */}
-            <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl z-40 p-6 max-h-[80vh] overflow-y-auto -mx-4">
+            <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl z-40 px-6 pt-6 pb-8 max-h-[80vh] overflow-y-auto">
               <div className="mb-6">
                 <h2 className="text-lg font-semibold mb-4">스터디 그룹 추가</h2>
                 
@@ -202,7 +207,7 @@ export default function GroupPage() {
                 </div>
 
                 {/* 버튼 */}
-                <div className="flex gap-3">
+                <div className="flex gap-3 mb-20">
                   <button
                     onClick={() => {
                       setShowAddModal(false);
