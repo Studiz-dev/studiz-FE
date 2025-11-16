@@ -1,8 +1,8 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink } from "react-router-dom";
 
-import HomeIcon from '../assets/home.svg?react';
-import GroupIcon from '../assets/group.svg?react';
-import MyIcon from '../assets/my.svg?react';
+import HomeIcon from "../assets/home.svg?react";
+import GroupIcon from "../assets/group.svg?react";
+import MyIcon from "../assets/my.svg?react";
 
 export default function BottomNav() {
   return (
@@ -10,7 +10,6 @@ export default function BottomNav() {
     <nav className="absolute bottom-0 left-0 right-0 z-10 bg-white h-16 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] rounded-t-xl">
       {/* 5. 아이콘 3개를 가로로, 간격을 벌려서 배치 */}
       <ul className="flex justify-around items-center h-full pb-[env(safe-area-inset-bottom)]">
-        
         {/* "홈" 아이템 */}
         <li>
           <NavLink
@@ -19,7 +18,7 @@ export default function BottomNav() {
             // 현재 페이지가 이 경로(to="/")와 일치하면 isActive는 true가 됩니다.
             className={({ isActive }) =>
               `flex flex-col items-center gap-1 ${
-                isActive ? 'text-[#5E936C]' : 'text-[#CAE8BD]' // 활성화/비활성화 색상
+                isActive ? "text-[#5E936C]" : "text-[#CAE8BD]" // 활성화/비활성화 색상
               }`
             }
           >
@@ -35,7 +34,7 @@ export default function BottomNav() {
             to="/Group" // 클릭 시 "/Group" 경로로 이동
             className={({ isActive }) =>
               `flex flex-col items-center gap-1 ${
-                isActive ? 'text-[#5E936C]' : 'text-[#CAE8BD]'
+                isActive ? "text-[#5E936C]" : "text-[#CAE8BD]"
               }`
             }
           >
@@ -50,7 +49,7 @@ export default function BottomNav() {
             to="/My" // 클릭 시 "/My" 경로로 이동
             className={({ isActive }) =>
               `flex flex-col items-center gap-1 ${
-                isActive ? 'text-[#5E936C]' : 'text-[#CAE8BD]'
+                isActive ? "text-[#5E936C]" : "text-[#CAE8BD]"
               }`
             }
           >
@@ -58,7 +57,6 @@ export default function BottomNav() {
             <span className="text-xs font-medium">마이</span>
           </NavLink>
         </li>
-
       </ul>
     </nav>
   );
