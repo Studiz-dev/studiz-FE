@@ -1,238 +1,226 @@
+// src/pages/GroupPage.tsx
 import { useState } from "react";
 import book from "../assets/book.svg";
-
-interface StudyGroup {
-  id: number;
-  category: string; 
-  title: string; 
-  leader: string;
-  totalMembers: number;
-  currentMembers: number; // 현재 가입한 인원
-}
+import SortBottomSheet from "../components/SortBottomSheet.tsx";
+import AddGroupModal from "../components/AddGroupModal.tsx";
+import JoinGroupModal from "../components/JoinGroupModal.tsx";
+import ActionMenu from "../components/ActionMenu.tsx";
+import SuccessModal from "../components/SuccessModal.tsx";
+import type { StudyGroup, SortOrder } from "../types/group";
+import { findGroupByCode } from "../mock/groupData";
+import plus from "../assets/plus.svg";
 
 export default function GroupPage() {
   const [studyGroups, setStudyGroups] = useState<StudyGroup[]>([]);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [sortOrder, setSortOrder] = useState("최신순");
-  
-  // 입력 폼 상태
-  const [formData, setFormData] = useState({
-    category: "",
-    title: "",
-    leader: "",
-    totalMembers: "",
-  });
+  const [sortOrder, setSortOrder] = useState<SortOrder>("최신순");
 
-  const handleAddGroup = () => {
-    if (!formData.category || !formData.title || !formData.leader || !formData.totalMembers) {
-      return; // 필수 입력 확인
-    }
-    
+  const [showSortModal, setShowSortModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showJoinModal, setShowJoinModal] = useState(false);
+  const [showFabMenu, setShowFabMenu] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showJoinSuccessModal, setShowJoinSuccessModal] = useState(false);
+  const [joinSuccessGroupName, setJoinSuccessGroupName] = useState("");
+
+  // 그룹 추가 콜백 (모달에서 호출됨)
+  const handleAddGroup = (data: {
+    category: string;
+    title: string;
+    leader: string;
+    totalMembers: number;
+  }) => {
     const newGroup: StudyGroup = {
       id: Date.now(),
-      category: formData.category,
-      title: formData.title,
-      leader: formData.leader,
-      totalMembers: parseInt(formData.totalMembers) || 0,
-      currentMembers: 1, // 스터디장 포함 초기 인원
+      category: data.category,
+      title: data.title,
+      leader: data.leader,
+      totalMembers: data.totalMembers,
+      currentMembers: 1,
     };
-    setStudyGroups([...studyGroups, newGroup]);
-    setShowAddModal(false);
-    // 폼 초기화
-    setFormData({
-      category: "",
-      title: "",
-      leader: "",
-      totalMembers: "",
-    });
+    setStudyGroups((prev) => [...prev, newGroup]);
+    setShowSuccessModal(true);
   };
 
-  return (
-    <div
-     className="relative flex flex-col h-[844px]"
-   >
-      {/* 프레임 내부 컨테이너 */}
-      <h1 className="text-lg font-semibold text-center mb-8 pt-28">나의 스터디그룹</h1>
+  // 정렬 적용된 배열
+  const sortedGroups = [...studyGroups].sort((a, b) =>
+    sortOrder === "최신순" ? b.id - a.id : a.id - b.id
+  );
 
-      {/* 컨텐츠 영역 (연두색) */}
-      {/* 초록색 배경이 BottomNav(64px) 바로 위까지 가도록 설정 */}
+  return (
+    <div className="relative flex flex-col h-[844px]">
+      <h1 className="text-lg font-semibold text-center mb-8 pt-28">
+        나의 스터디그룹
+      </h1>
+
+      {/* 컨텐츠 영역 */}
       <div className="bg-[#F9FFF6] flex-1 pb-16">
-          {studyGroups.length === 0 ? (
-            /* 빈 상태 메시지 */
-            <div className="flex flex-col items-center justify-center h-full text-center text-[#9AC58B]">
-              <img src={book} alt="책 아이콘" className="w-12 h-12 mb-4" />
-              <p className="text-sm font-medium">
-                아직 가입한
-                <br />
-                스터디그룹이 없어요
-              </p>
-            </div>
-          ) : (
-            <>
-              {/* 정렬 필터 */}
-              <div className="pt-4 mb-4 px-4">
-                <button
-                  onClick={() => setSortOrder(sortOrder === "최신순" ? "인기순" : "최신순")}
-                  className="flex items-center gap-1 text-sm text-gray-700"
+        {studyGroups.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full text-center text-[#9AC58B]">
+            <img src={book} alt="책 아이콘" className="w-12 h-12 mb-4" />
+            <p className="text-sm font-medium">
+              아직 가입한
+              <br />
+              스터디그룹이 없어요
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* 정렬 기준 버튼 */}
+            <div className="pt-4 mb-4 px-4">
+              <button
+                onClick={() => setShowSortModal(true)}
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white border text-sm text-gray-700"
+              >
+                {sortOrder}
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  {sortOrder}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {/* 스터디 리스트 */}
+            <div className="overflow-y-auto px-4 pb-4">
+              <div className="flex flex-col gap-3 items-center">
+                {sortedGroups.map((group) => (
+                  <div
+                    key={group.id}
+                    className="bg-white rounded-[15px] p-3 border border-[1.5px] border-main2 shadow-sm w-full"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-              </div>
-              {/* 스터디 그룹 목록 */}
-              <div className="overflow-y-auto px-4 pb-4">
-                <div className="flex flex-col gap-3 items-center">
-                  {studyGroups.map((group) => (
-                    <div
-                      key={group.id}
-                      className="bg-white rounded-lg p-4 border border-[#E8F5E3] shadow-sm w-full"
-                    >
-                      <div className="text-xs text-[#9AC58B] font-medium mb-1">
-                        {group.category}
-                      </div>
-                      <div className="text-base font-semibold text-gray-900 mb-2">
+                    <div className="text-sm text-point font-medium">
+                      {group.category}
+                    </div>
+                    <div className="text-lg font-semibold text-black1 mb-0.5">
                         {group.title}
                       </div>
-                      <div className="text-xs text-gray-500 mb-1">스터디장 {group.leader}</div>
-                      <div className="text-xs text-gray-500">
-                        인원 {group.currentMembers}/{group.totalMembers}명
-                      </div>
+                    <div className="mb-1 flex gap-2 items-center">
+                      <span className="flex items-center">
+                        <span className="text-xs text-gray3">스터디장</span>
+                        <span className="text-sm text-gray4 ml-1">{group.leader}</span>
+                      </span>
+                      <span className="flex items-center">
+                      <span className="flex items-center text-xs text-gray3">인원</span>
+                      <span className="text-sm text-gray4 ml-1">{group.currentMembers}/{group.totalMembers}명</span>
+                      </span>
                     </div>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
-        </div>
-
-        {/* 플로팅 + 버튼 (하단 고정, 모바일 프레임 내부) */}
-        <button
-          onClick={() => setShowAddModal(true)}
-          aria-label="그룹 추가"
-          className="absolute bottom-28 right-4 w-14 h-14 rounded-full bg-[#9AC58B] text-white shadow-lg
-                     flex items-center justify-center text-3xl font-light z-20"
-        >
-          +
-        </button>
-
-        {/* 그룹 추가 입력 모달 */}
-        {showAddModal && (
-          <>
-            {/* 배경 오버레이 (모바일 프레임 전체 덮기) */}
-            <div
-              className="fixed top-0 left-1/2 -translate-x-1/2 w-[390px] h-[844px] bg-black bg-opacity-20 z-30"
-              style={{ marginTop: 'calc((100vh - 844px) / 2)' }}
-              onClick={() => {
-                setShowAddModal(false);
-                setFormData({
-                  category: "",
-                  title: "",
-                  leader: "",
-                  totalMembers: "",
-                });
-              }}
-            />
-            {/* 모달 컨텐츠 */}
-            <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl z-40 px-6 pt-6 pb-8 max-h-[80vh] overflow-y-auto">
-              <div className="mb-6">
-                <h2 className="text-lg font-semibold mb-4">스터디 그룹 추가</h2>
-                
-                {/* 스터디종류 */}
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    스터디종류
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    placeholder="예: 척척학사"
-                    className="w-full h-12 rounded-lg border-2 border-gray-200 focus:border-[#9AC58B] bg-white px-4 py-3 outline-none text-sm"
-                  />
-                </div>
-
-                {/* 스터디명 */}
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    스터디명
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    placeholder="예: 시프공부를하자"
-                    className="w-full h-12 rounded-lg border-2 border-gray-200 focus:border-[#9AC58B] bg-white px-4 py-3 outline-none text-sm"
-                  />
-                </div>
-
-                {/* 스터디장 */}
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    스터디장
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.leader}
-                    onChange={(e) => setFormData({ ...formData, leader: e.target.value })}
-                    placeholder="예: 나영이"
-                    className="w-full h-12 rounded-lg border-2 border-gray-200 focus:border-[#9AC58B] bg-white px-4 py-3 outline-none text-sm"
-                  />
-                </div>
-
-                {/* 인원 */}
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    인원
-                  </label>
-                  <input
-                    type="number"
-                    value={formData.totalMembers}
-                    onChange={(e) => setFormData({ ...formData, totalMembers: e.target.value })}
-                    placeholder="예: 5"
-                    className="w-full h-12 rounded-lg border-2 border-gray-200 focus:border-[#9AC58B] bg-white px-4 py-3 outline-none text-sm"
-                  />
-                </div>
-
-                {/* 버튼 */}
-                <div className="flex gap-3 mb-20">
-                  <button
-                    onClick={() => {
-                      setShowAddModal(false);
-                      setFormData({
-                        category: "",
-                        title: "",
-                        leader: "",
-                        totalMembers: "",
-                      });
-                    }}
-                    className="flex-1 h-12 rounded-lg border-2 border-gray-200 text-gray-700 font-medium"
-                  >
-                    취소
-                  </button>
-                  <button
-                    onClick={handleAddGroup}
-                    className="flex-1 h-12 rounded-lg bg-[#9AC58B] text-white font-medium"
-                  >
-                    추가
-                  </button>
-                </div>
+                  </div>
+                ))}
               </div>
             </div>
           </>
         )}
       </div>
+
+      {/* 플로팅 + 버튼 */}
+      <button
+        onClick={() => setShowFabMenu(!showFabMenu)}
+        aria-label="메뉴 열기"
+        className="absolute bottom-28 right-4 w-14 h-14 rounded-full bg-main1 text-white shadow-lg
+                   flex items-center justify-center text-3xl font-light z-30"
+      >
+         <img src={plus} alt="plus" className="w-5 h-5" />
+      </button>
+
+      {/* 액션 메뉴 */}
+      <ActionMenu
+        open={showFabMenu}
+        onClose={() => setShowFabMenu(false)}
+        onJoinGroup={() => {
+          setShowJoinModal(true);
+          setShowFabMenu(false);
+        }}
+        onCreateGroup={() => {
+          setShowAddModal(true);
+          setShowFabMenu(false);
+        }}
+      />
+
+      {/* 정렬 바텀시트 모달 */}
+      <SortBottomSheet
+        open={showSortModal}
+        current={sortOrder}
+        onClose={() => setShowSortModal(false)}
+        onApply={(order: SortOrder) => {
+          setSortOrder(order);
+          setShowSortModal(false);
+        }}
+      />
+
+      {/* 스터디 추가 모달 */}
+      <AddGroupModal
+        open={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onSubmit={(data: {
+          category: string;
+          title: string;
+          leader: string;
+          totalMembers: number;
+        }) => {
+          handleAddGroup(data);
+          setShowAddModal(false);
+        }}
+      />
+
+      {/* 그룹 입장 모달 */}
+      <JoinGroupModal
+        open={showJoinModal}
+        onClose={() => setShowJoinModal(false)}
+        onSubmit={(code: string) => {
+          // mock data에서 가입 코드로 그룹 찾기
+          const foundGroup = findGroupByCode(code);
+          
+          if (!foundGroup) {
+            // 그룹을 찾지 못한 경우 (에러 처리)
+            alert("올바른 가입 코드를 입력해주세요.");
+            return;
+          }
+          
+          // 입장한 그룹 정보 생성 (currentMembers는 최소 2명)
+          const joinedGroup: StudyGroup = {
+            ...foundGroup,
+            currentMembers: Math.max(2, foundGroup.currentMembers + 1), // 최소 2명, 기존 인원 + 1
+          };
+          
+          // 그룹을 리스트에 추가
+          setStudyGroups((prev) => [...prev, joinedGroup]);
+          
+          // 성공 모달 표시
+          setJoinSuccessGroupName(joinedGroup.title);
+          setShowJoinModal(false);
+          setShowJoinSuccessModal(true);
+        }}
+      />
+
+      {/* 그룹 생성 성공 모달 */}
+      <SuccessModal
+        open={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        message1="그룹이 성공적으로"
+        message2="생성되었습니다."
+        title="그룹 만들기"
+      />
+
+      {/* 그룹 입장 성공 모달 */}
+      <SuccessModal
+        open={showJoinSuccessModal}
+        onClose={() => setShowJoinSuccessModal(false)}
+        message1={
+          <>
+            <span className="text-point">{joinSuccessGroupName}</span>
+          </>
+        }
+        message2="그룹에 입장하였습니다."
+        title="그룹 입장하기"
+      />
+    </div>
   );
 }

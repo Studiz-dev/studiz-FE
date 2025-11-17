@@ -1,5 +1,5 @@
-import UpcomingSchedule from '../components/UpcomingSchedule'; 
-import TodoList from '../components/TodoList';
+import UpcomingSchedule from "../components/UpcomingSchedule";
+import TodoList from "../components/TodoList";
 
 export default function HomePage() {
   return (
