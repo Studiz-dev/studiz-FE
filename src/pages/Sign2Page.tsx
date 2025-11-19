@@ -19,7 +19,7 @@ export default function Sign2Page() {
 
   return (
     /*상단 헤더*/
-    <div className="mt-[130px]">
+    <div className="mt-[40px]">
       <div className="grid grid-cols-3 items-center h-10">
         <img
           src={back}
@@ -32,7 +32,7 @@ export default function Sign2Page() {
         </div>
       </div>
       {/*스텝 표시*/}
-      <div className="flex justify-center mt-6">
+      <div className="flex justify-center mt-8">
         <div className="flex justify-center items-center w-8 h-8 rounded-full bg-main1 text-white font-semibold">
           1
         </div>
@@ -41,7 +41,7 @@ export default function Sign2Page() {
           2
         </div>
       </div>
-      <div className="flex flex-col justify-center items-center mt-6">
+      <div className="flex flex-col justify-center items-center mt-16">
         <div className="relative w-28 h-28">
           {/* 이미지 미리보기 */}
           {image ? (
@@ -65,7 +65,7 @@ export default function Sign2Page() {
             />
           </label>
         </div>
-        <div className="w-full max-w-sm mx-auto px-3 pt-12 pb-4">
+        <div className="w-full max-w-sm mx-auto px-3 pt-20 pb-4">
           <label className="block font-medium text-base text-gray4 mb-2">
             이름
           </label>
@@ -87,7 +87,7 @@ export default function Sign2Page() {
             disabled={isDisabled}
             onClick={() => navigate("/done")}
             className={`
-            w-full h-12 rounded-lg mt-8 text-white text-[18px] font-semibold
+            w-full h-12 rounded-lg mt-[84px] text-white text-[18px] font-semibold
             ${
               isDisabled
                 ? "bg-main1 cursor-not-allowed"

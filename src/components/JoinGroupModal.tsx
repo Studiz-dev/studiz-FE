@@ -36,9 +36,9 @@ export default function JoinGroupModal({
     <>
       {/* 오버레이 */}
       <div
-        className="fixed top-0 left-1/2 -translate-x-1/2 w-[390px] h-[844px] z-30"
+        className="fixed top-0 left-1/2 -translate-x-1/2 w-[390px] h-[744px] z-30"
         style={{
-          marginTop: "calc((100vh - 844px) / 2)",
+          marginTop: "calc((100vh - 744px) / 2)",
           backgroundColor: "#1A1A1A52", // 32% 정도 불투명도
         }}
         onClick={handleClose}
@@ -49,7 +49,7 @@ export default function JoinGroupModal({
         className="fixed left-1/2 z-40 w-[232px] h-[200px] -translate-x-1/2
                    rounded-[8px] bg-white px-3 py-3 shadow-[0_8px_24px_rgba(0,0,0,0.16)] flex flex-col"
         style={{
-          marginTop: "calc((100vh - 844px) / 2 + (844px - 200px) / 2)",
+          marginTop: "calc((100vh - 744px) / 2 + (744px - 200px) / 2)",
         }}
       >
         {/* 헤더 */}

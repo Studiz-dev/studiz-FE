@@ -22,8 +22,8 @@ export default function SortBottomSheet({
     <>
       {/* 오버레이 */}
       <div
-        className="fixed top-0 left-1/2 -translate-x-1/2 w-[390px] h-[844px] bg-black bg-opacity-20 z-30"
-        style={{ marginTop: "calc((100vh - 844px) / 2)" }}
+        className="fixed top-0 left-1/2 -translate-x-1/2 w-[390px] h-[744px] bg-black bg-opacity-20 z-30"
+        style={{ marginTop: "calc((100vh - 744px) / 2)" }}
         onClick={onClose}
       />
 
