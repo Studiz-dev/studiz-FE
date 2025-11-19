@@ -20,8 +20,8 @@ export default function ActionMenu({
     <>
       {/* 오버레이 */}
       <div
-        className="fixed top-0 left-1/2 -translate-x-1/2 w-[390px] h-[844px] bg-[#1A1A1A] opacity-[0.32] z-20"
-        style={{ marginTop: "calc((100vh - 844px) / 2)" }}
+        className="fixed top-0 left-1/2 -translate-x-1/2 w-[390px] h-[744px] bg-[#1A1A1A] opacity-[0.32] z-20"
+        style={{ marginTop: "calc((100vh - 744px) / 2)" }}
         onClick={onClose}
       />
 

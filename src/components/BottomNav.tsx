@@ -7,7 +7,7 @@ import MyIcon from "../assets/my.svg?react";
 export default function BottomNav() {
   return (
     // 4. 페이지 하단에 고정되는 nav 태그 (Tailwind CSS 스타일 적용)
-    <nav className="absolute bottom-0 left-0 right-0 z-10 bg-white h-16 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] rounded-t-xl">
+    <nav className="sticky bottom-0 left-0 right-0 z-10 bg-white h-16 shadow-[0_-2px_10px_rgba(0,0,0,0.05)] rounded-t-xl">
       {/* 5. 아이콘 3개를 가로로, 간격을 벌려서 배치 */}
       <ul className="flex justify-around items-center h-full pb-[env(safe-area-inset-bottom)]">
         {/* "홈" 아이템 */}

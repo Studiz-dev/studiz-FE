@@ -16,7 +16,7 @@ export default function MainPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center pt-[180px]">
+    <div className="flex flex-col items-center justify-center pt-[140px]">
       <img src={logo} alt="Logo" className="w-[180px] h-auto" />
       <div className="w-full flex items-start justify-center bg-white">
         <form onSubmit={onSubmit} className="w-full px-3 pt-20 pb-10">

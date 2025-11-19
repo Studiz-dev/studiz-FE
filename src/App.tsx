@@ -17,15 +17,14 @@ export default function App() {
   // [핵심 수정!]
   // .includes() 대신 .some()과 .startsWith()를 사용해
   // '/Home/' 처럼 끝에 '/'가 붙어도 'true'가 되도록 수정합니다.
-  const showNav = navPages.some((path) => location.pathname.startsWith(path));
+  // 대소문자 무시하도록 toLowerCase() 추가
+  const showNav = navPages.some(
+    (path) => location.pathname.toLowerCase().startsWith(path.toLowerCase())
+  );
 
-  // [복원!] 바깥 div는 Tailwind 클래스가 없는 게 맞습니다.
-  // '#root'가 이미 회색 배경/가운데 정렬을 다 해주고 있습니다.
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      {/* [복원!] .mobile-frame은 'relative'만 있으면 됩니다.
-        (h-screen, overflow-hidden 다 틀린 거였습니다.)
-      */}
+    <div className="w-full h-full md:flex md:justify-center md:items-center md:min-h-screen bg-gray-100">
+      {/* 모바일 프레임 - 반응형으로 작동 */}
       <div className="mobile-frame relative">
         {/* [복원!] <main> 태그는 'pb-16' 외에 다른 클래스가 필요 없습니다.
           (h-full, overflow-y-auto 다 틀린 거였습니다.)

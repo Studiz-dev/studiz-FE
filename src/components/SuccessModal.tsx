@@ -26,9 +26,9 @@ export default function SuccessModal({
     <>
       {/* 오버레이 */}
       <div
-        className="fixed top-0 left-1/2 -translate-x-1/2 w-[390px] h-[844px] z-50"
+        className="fixed top-0 left-1/2 -translate-x-1/2 w-[390px] h-[744px] z-50"
         style={{
-          marginTop: "calc((100vh - 844px) / 2)",
+          marginTop: "calc((100vh - 744px) / 2)",
           backgroundColor: "rgba(26, 26, 26, 0.32)",
         }}
         onClick={handleClose}
@@ -39,7 +39,7 @@ export default function SuccessModal({
         className="fixed left-1/2 z-50 w-[232px] h-[144px] -translate-x-1/2
                    rounded-[8px] bg-white px-3 py-3 shadow-[0_8px_24px_rgba(0,0,0,0.16)] flex flex-col"
         style={{
-          marginTop: "calc((100vh - 844px) / 2 + (844px - 144px) / 2)",
+          marginTop: "calc((100vh - 744px) / 2 + (744px - 144px) / 2)",
         }}
       >
         {/* 헤더 */}

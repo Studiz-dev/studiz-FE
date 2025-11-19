@@ -5,7 +5,7 @@ export default function DonePage() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center justify-center mt-[100px]">
+    <div className="flex flex-col items-center justify-center mt-[40px]">
       <div className="flex items-center justify-center font-semibold text-[18px] text-black1 h-[60px]">
         가입 완료
       </div>
@@ -20,12 +20,12 @@ export default function DonePage() {
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-center w-full h-21 mt-48">
+      <div className="w-full max-w-sm mx-auto px-3 mt-[92px]">
         <button
           type="button"
           onClick={() => navigate("/home")}
           className="
-        w-full h-12 rounded-lg text-white text-[18px] font-semibold bg-point hover:bg-[#4C6953] transition"
+        w-full h-12 rounded-lg mt-10 text-white text-[18px] font-semibold bg-point hover:bg-[#4C6953] transition"
         >
           시작하기
         </button>

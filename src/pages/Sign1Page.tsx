@@ -29,7 +29,7 @@ export default function Sign1Page() {
 
   return (
     /*상단 헤더*/
-    <div className="mt-[130px]">
+    <div className="mt-[40px]">
       <div className="grid grid-cols-3 items-center h-10">
         <img
           src={back}
@@ -42,7 +42,7 @@ export default function Sign1Page() {
         </div>
       </div>
       {/*스텝 표시*/}
-      <div className="flex justify-center mt-6">
+      <div className="flex justify-center mt-8">
         <div className="flex justify-center items-center w-8 h-8 rounded-full bg-main1 text-white font-semibold">
           1
         </div>
@@ -52,7 +52,7 @@ export default function Sign1Page() {
         </div>
       </div>
       {/*아이디, 비밀번호 입력*/}
-      <form onSubmit={onSubmit} className="w-full px-3 pt-12 pb-10">
+      <form onSubmit={onSubmit} className="w-full max-w-sm mx-auto px-3 pt-16 pb-10">
         {/* 아이디 */}
         <label className="block font-medium text-base text-gray4 mb-2">
           아이디
@@ -177,7 +177,7 @@ export default function Sign1Page() {
           disabled={isDisabled}
           onClick={() => navigate("/sign2")}
           className={`
-            w-full h-12 rounded-lg mt-6 text-white text-[18px] font-semibold
+            w-full h-12 rounded-lg mt-10 text-white text-[18px] font-semibold
             ${
               isDisabled
                 ? "bg-main1 cursor-not-allowed"
