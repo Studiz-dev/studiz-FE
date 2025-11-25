@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import back from "../assets/back.svg";
 import edit from "../assets/edit.svg";
+import Header from "../components/Header";
 
 export default function Sign2Page() {
   const navigate = useNavigate();
@@ -19,18 +19,8 @@ export default function Sign2Page() {
 
   return (
     /*상단 헤더*/
-    <div className="mt-[40px]">
-      <div className="grid grid-cols-3 items-center h-10">
-        <img
-          src={back}
-          alt="Back"
-          className="justify-self-start pl-4 cursor-pointer"
-          onClick={() => navigate("/sign1")}
-        />
-        <div className="justify-self-center font-semibold text-lg">
-          가입하기
-        </div>
-      </div>
+    <div className="flex flex-col h-full bg-white">
+      <Header title="가입하기" backPath="/sign1" showBorder={false} />
       {/*스텝 표시*/}
       <div className="flex justify-center mt-8">
         <div className="flex justify-center items-center w-8 h-8 rounded-full bg-main1 text-white font-semibold">
