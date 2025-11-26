@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage";
 import Sign1Page from "./pages/Sign1Page";
 import Sign2Page from "./pages/Sign2Page";
 import MemberPage from "./pages/MemberPage";
+import CreateSchedulePage from "./pages/CreateSchedulePage";
 import "./index.css";
 
 import BottomNav from "./components/BottomNav";
@@ -42,6 +43,8 @@ export default function App() {
             <Route path="/sign2" element={<Sign2Page />} />
 
             <Route path="/Member" element={<MemberPage />} />
+
+            <Route path="/CreateSchedule" element={<CreateSchedulePage />} />
             <Route path="*" element={<div>404</div>} />
           </Routes>
         </main>
