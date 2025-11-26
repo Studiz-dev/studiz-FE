@@ -13,7 +13,7 @@ import BottomNav from "./components/BottomNav";
 
 export default function App() {
   const location = useLocation();
-  const navPages = ["/Home", "/Group", "/My"];
+  const navPages = ["/Home", "/Group"];
 
   // [핵심 수정!]
   // .includes() 대신 .some()과 .startsWith()를 사용해
