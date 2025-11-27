@@ -20,7 +20,7 @@ export default function Header({ title, backPath, showBack = true, showBorder = 
     };
 
     return (
-        <header className={`relative flex items-center justify-center h-[60px] mt-[40px] bg-white ${showBorder ? "border-b-[1.5px] border-main4" : ""}`}>
+        <header className={`relative flex items-center justify-center h-[60px] bg-white ${showBorder ? "border-b-[1.5px] border-main4" : ""}`}>
             {showBack && (
                 <button onClick={handleBack} className="absolute left-2 p-2">
                     <BackIcon className="w-[27px] h-[32px]" />

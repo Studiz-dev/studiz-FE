@@ -1,13 +1,13 @@
 import Crown from "../assets/crown.svg?react";
 import Dots from "../assets/dots.svg?react";
+import type { Member } from "../types/member";
 
 interface MemberInfoProps {
-    name: string;
-    isLeader?: boolean;
-    profileImage?: string;
+    member: Member;
 }
 
-export default function MemberInfo({ name, isLeader = false, profileImage }: MemberInfoProps) {
+export default function MemberInfo({ member }: MemberInfoProps) {
+    const { name, isLeader, profileImage } = member;
     return (
         <div className="flex items-center justify-between px-6 h-16 bg-white border-b-[1.5px] border-main4">
             <div className="flex items-center gap-4">

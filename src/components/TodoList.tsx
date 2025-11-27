@@ -3,7 +3,7 @@ import { useState } from "react";
 import {
   todoGroups as initialTodoGroups,
   type TodoGroup,
-} from "../mock/DummyData";
+} from "../mock/scheduleTodoData";
 
 import CheckBox from "../assets/CheckBox.svg?react";
 

@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage";
 import Sign1Page from "./pages/Sign1Page";
 import Sign2Page from "./pages/Sign2Page";
 import MemberPage from "./pages/MemberPage";
+import CreateToDoPage from "./pages/CreateToDoPage";
 import CreateSchedulePage from "./pages/CreateSchedulePage";
 import "./index.css";
 
@@ -44,6 +45,7 @@ export default function App() {
 
             <Route path="/Member" element={<MemberPage />} />
 
+            <Route path="/CreateToDo" element={<CreateToDoPage />} />
             <Route path="/CreateSchedule" element={<CreateSchedulePage />} />
             <Route path="*" element={<div>404</div>} />
           </Routes>
