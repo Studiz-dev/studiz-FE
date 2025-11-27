@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-import LabeledInput from "../components/LabeledInput";
-import DateRangeSelector from "../components/DateRangeSelector";
-import TimeRangeSelector from "../components/TimeRangeSelector";
-import DeadlineSelector from "../components/DeadlineSelector";
+import LabeledInput from "../components/CreateScheduleToDo/LabeledInput";
+import DateRangeSelector from "../components/CreateScheduleToDo/DateRangeSelector";
+import TimeRangeSelector from "../components/CreateScheduleToDo/TimeRangeSelector";
+import DeadlineSelector from "../components/CreateScheduleToDo/DeadlineSelector";
 import ActionButton from "../components/ActionButton"; 
 import SuccessModal from "../components/SuccessModal";
 
