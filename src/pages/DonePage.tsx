@@ -1,14 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import CheckIcon from "../assets/check-icon.svg";
+import Header from "../components/Header";
 
 export default function DonePage() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center justify-center mt-[40px]">
-      <div className="flex items-center justify-center font-semibold text-[18px] text-black1 h-[60px]">
-        가입 완료
-      </div>
+    <div className="flex flex-col h-full bg-white">
+      <Header title="가입 완료" showBack={false} showBorder={false} />
       <div className="flex flex-col items-center justify-center gap-5 mt-40">
         <img src={CheckIcon} alt="CheckIcon" className="w-[96px] h-auto" />
         <div className="flex flex-col items-center justify-center gap-2">

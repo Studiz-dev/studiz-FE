@@ -1,28 +1,5 @@
-// 1. 다가오는 일정 데이터 타입 정의 (TypeScript)
-export interface ScheduleItem {
-  id: number;
-  groupName: string;
-  studyName: string;
-  dateTime: string;
-  dDay: string;
-}
-
-// 2. To-Do 데이터 타입 정의 (TypeScript)
-export interface TodoItem {
-  id: number;
-  taskName: string;
-  completedCount: number;
-  totalCount: number;
-  isChecked: boolean; // <-- 각 아이템의 체크 상태
-}
-
-export interface TodoGroup {
-  id: number;
-  groupName: string;
-  todos: TodoItem[]; // <-- TodoItem 배열을 가짐
-}
-
-// --- 3. 더미 데이터 생성 ---
+import type { ScheduleItem } from "../types/schedule";
+import type { TodoGroup } from "../types/todo";
 
 // "다가오는 일정" 더미 데이터
 export const upcomingSchedules: ScheduleItem[] = [

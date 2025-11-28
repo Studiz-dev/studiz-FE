@@ -1,4 +1,4 @@
-import { upcomingSchedules } from "../pages/DummyData";
+import { upcomingSchedules } from "../mock/scheduleTodoData";
 
 export default function UpcomingSchedule() {
   return (
