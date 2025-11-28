@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 interface SuccessModalProps {
   open: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm?: () => void;
   message1: string | ReactNode;
   message2: string;
   title?: string;
