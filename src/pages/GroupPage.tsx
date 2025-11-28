@@ -48,7 +48,7 @@ export default function GroupPage() {
 
   return (
     <div className="relative flex flex-col h-[744px]">
-      <h1 className="text-lg font-semibold text-center mb-8 pt-28">
+      <h1 className="text-lg font-semibold text-center mb-8 pt-[40px]">
         나의 스터디그룹
       </h1>
 
