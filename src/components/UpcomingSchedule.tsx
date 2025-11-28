@@ -11,7 +11,7 @@ export default function UpcomingSchedule() {
       <div className="flex items-center justify-between">
         <h1 className="text-[18px] font-bold mb-2 text-black1">다가오는 일정</h1>
         {isLeader && (<button onClick={() => navigate("/CreateSchedule")} className="px-2 py-1 bg-main4 rounded-[12px] items-center flex gap-1">
-          <Plus />
+          <Plus className="text-point" />
           <span className="text-point text-[14px] font-medium ">새로운 일정</span>
         </button>)}
       </div>

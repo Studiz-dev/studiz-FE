@@ -53,7 +53,7 @@ export default function CreateToDoPage() {
 
   return (
     <div className="flex flex-col flex-1 h-full bg-white">
-      <Header title="To-Do 생성하기" backPath="/Home" />
+      <Header title="To-Do 생성하기" backPath="/GroupHome" />
       <form className="flex flex-col">
         <LabeledInput label="이름" placeholder="To-Do의 이름을 적어주세요" value={scheduleName} onChange={(e) => setScheduleName(e.target.value)} />
         <DeadlineSelector />

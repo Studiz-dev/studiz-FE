@@ -12,7 +12,7 @@ export default function TodoList() {
       <div className="flex items-center justify-between">
         <h1 className="text-[18px] font-bold mb-2 text-black1">To-Do</h1>
         {isLeader && (<button onClick={() => navigate("/CreateToDo")} className="px-2 py-1 bg-main4 rounded-[12px] items-center flex gap-1">
-          <Plus />
+          <Plus className="text-point" />
           <span className="text-point text-[14px] font-medium translate-y-[1px] ">새로운 To-Do</span>
         </button>)}
       </div>

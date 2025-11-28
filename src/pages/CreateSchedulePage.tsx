@@ -34,7 +34,7 @@ export default function CreateSchedulePage() {
 
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-white">
-      <Header title="일정 생성하기" backPath="/Home" /> 
+      <Header title="일정 생성하기" backPath="/GroupHome" /> 
       <form className="flex flex-col">
         <LabeledInput label="이름" placeholder="일정의 이름을 적어주세요" value={scheduleName} onChange={(e) => setScheduleName(e.target.value)} />
         <LabeledInput label="장소" placeholder="장소를 적어주세요" value={place} onChange={(e) => setPlace(e.target.value)} />
