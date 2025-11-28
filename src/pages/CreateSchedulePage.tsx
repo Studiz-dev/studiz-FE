@@ -29,12 +29,12 @@ export default function CreateSchedulePage() {
 
   const handleConfirm = () => {
     setShowModal(false); 
-    navigate("/Home"); // [요청] 홈 페이지로 연결
+    navigate("/GroupHome"); // [요청] 홈 페이지로 연결
   };
 
   return (
-    <div className="flex flex-col h-full bg-white">
-      <Header title="일정 생성하기" backPath="/Home" /> 
+    <div className="flex flex-col flex-1 min-h-screen bg-white">
+      <Header title="일정 생성하기" backPath="/GroupHome" /> 
       <form className="flex flex-col">
         <LabeledInput label="이름" placeholder="일정의 이름을 적어주세요" value={scheduleName} onChange={(e) => setScheduleName(e.target.value)} />
         <LabeledInput label="장소" placeholder="장소를 적어주세요" value={place} onChange={(e) => setPlace(e.target.value)} />
@@ -42,14 +42,12 @@ export default function CreateSchedulePage() {
         <TimeRangeSelector />
         <DeadlineSelector />
       </form>
-      <div className="fixed bottom-10 left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white z-20 pt-4 pb-6">
-        <ActionButton
+      <ActionButton
             text="일정 생성하기"
             onClick={handleCreateSchedule}
             isDisabled={isDisabled}
             type="button" 
         />
-      </div>
       <SuccessModal 
         open={showModal}
         onClose={() => setShowModal(false)}

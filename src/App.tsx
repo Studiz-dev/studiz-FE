@@ -28,7 +28,7 @@ export default function App() {
           (h-full, overflow-y-auto 다 틀린 거였습니다.)
           .mobile-frame의 'overflow:auto'가 스크롤을 담당합니다.
         */}
-        <main className={showNav ? "pb-16" : ""}>
+        <main>
           <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="/done" element={<DonePage />} />
