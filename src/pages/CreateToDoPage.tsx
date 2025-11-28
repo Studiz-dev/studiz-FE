@@ -48,11 +48,11 @@ export default function CreateToDoPage() {
 
   const handleConfirm = () => {
     setShowModal(false);
-    navigate("/Home"); // [요청] 홈 페이지로 연결
+    navigate("/GroupHome"); // [요청] 홈 페이지로 연결
   };
 
   return (
-    <div className="flex flex-col h-full bg-white">
+    <div className="flex flex-col flex-1 h-full bg-white">
       <Header title="To-Do 생성하기" backPath="/Home" />
       <form className="flex flex-col">
         <LabeledInput label="이름" placeholder="To-Do의 이름을 적어주세요" value={scheduleName} onChange={(e) => setScheduleName(e.target.value)} />
@@ -60,14 +60,12 @@ export default function CreateToDoPage() {
         <Method selectedMethods={selectedMethods} setSelectedMethods={setSelectedMethods} />
         <SelectMember members={members} onToggle={toggleMember}/>
       </form>
-      <div className="fixed bottom-10 w-full left-1/2 -translate-x-1/2 w-full max-w-[390px] bg-white z-20 pt-4 pb-6">
-        <ActionButton
+      <ActionButton
           text="To-Do 생성하기"
           onClick={handleCreateSchedule}
           isDisabled={isDisabled}
           type="button"
         />
-      </div>
       <SuccessModal
         open={showModal}
         onClose={() => setShowModal(false)}

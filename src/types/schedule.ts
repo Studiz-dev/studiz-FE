@@ -1,7 +1,7 @@
 export interface ScheduleItem {
   id: number;
-  groupName: string;
-  studyName: string;
+  location: string;
+  scheduleName: string;
   dateTime: string;
-  dDay: string;
+  dDay: number;
 }
