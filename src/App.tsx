@@ -3,24 +3,22 @@ import MainPage from "./pages/MainPage";
 import DonePage from "./pages/DonePage";
 import GroupPage from "./pages/GroupPage";
 import HomePage from "./pages/HomePage";
-import MyPage from "./pages/MyPage";
 import Sign1Page from "./pages/Sign1Page";
 import Sign2Page from "./pages/Sign2Page";
+import MemberPage from "./pages/MemberPage";
+import CreateToDoPage from "./pages/CreateToDoPage";
+import CreateSchedulePage from "./pages/CreateSchedulePage";
+import GroupHomePage from "./pages/GroupHomePage";
 import "./index.css";
 
 import BottomNav from "./components/BottomNav";
 
 export default function App() {
   const location = useLocation();
-  const navPages = ["/Home", "/Group", "/My"];
+  const navPages = ["/Home", "/Group"];
 
-  // [핵심 수정!]
-  // .includes() 대신 .some()과 .startsWith()를 사용해
-  // '/Home/' 처럼 끝에 '/'가 붙어도 'true'가 되도록 수정합니다.
-  // 대소문자 무시하도록 toLowerCase() 추가
-  const showNav = navPages.some(
-    (path) => location.pathname.toLowerCase().startsWith(path.toLowerCase())
-  );
+  const cleanPath = location.pathname.replace(/\/+$/, "").toLowerCase();
+  const showNav = navPages.some((path) => cleanPath === path.toLowerCase());
 
   return (
     <div className="w-full h-full md:flex md:justify-center md:items-center md:min-h-screen bg-gray-100">
@@ -30,17 +28,22 @@ export default function App() {
           (h-full, overflow-y-auto 다 틀린 거였습니다.)
           .mobile-frame의 'overflow:auto'가 스크롤을 담당합니다.
         */}
-        <main className={showNav ? "pb-16" : ""}>
+        <main>
           <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="/done" element={<DonePage />} />
 
             <Route path="/Group" element={<GroupPage />} />
             <Route path="/Home" element={<HomePage />} />
-            <Route path="/My" element={<MyPage />} />
+            <Route path="/GroupHome" element={<GroupHomePage />} />
 
             <Route path="/sign1" element={<Sign1Page />} />
             <Route path="/sign2" element={<Sign2Page />} />
+
+            <Route path="/Member" element={<MemberPage />} />
+
+            <Route path="/CreateToDo" element={<CreateToDoPage />} />
+            <Route path="/CreateSchedule" element={<CreateSchedulePage />} />
             <Route path="*" element={<div>404</div>} />
           </Routes>
         </main>

@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 interface SuccessModalProps {
   open: boolean;
   onClose: () => void;
+  onConfirm?: () => void;
   message1: string | ReactNode;
   message2: string;
   title?: string;
@@ -12,6 +13,7 @@ interface SuccessModalProps {
 export default function SuccessModal({
   open,
   onClose,
+  onConfirm,
   message1,
   message2,
   title = "그룹 만들기",
@@ -26,9 +28,9 @@ export default function SuccessModal({
     <>
       {/* 오버레이 */}
       <div
-        className="fixed top-0 left-1/2 -translate-x-1/2 w-[390px] h-[744px] z-50"
+        className="fixed inset-0 z-50"
         style={{
-          marginTop: "calc((100vh - 744px) / 2)",
+
           backgroundColor: "rgba(26, 26, 26, 0.32)",
         }}
         onClick={handleClose}
@@ -36,10 +38,10 @@ export default function SuccessModal({
 
       {/* 성공 모달 */}
       <div
-        className="fixed left-1/2 z-50 w-[232px] h-[144px] -translate-x-1/2
+        className="fixed left-1/2 top-1/2 z-50 w-[232px] h-[144px] -translate-x-1/2 -translate-y-1/2
                    rounded-[8px] bg-white px-3 py-3 shadow-[0_8px_24px_rgba(0,0,0,0.16)] flex flex-col"
         style={{
-          marginTop: "calc((100vh - 744px) / 2 + (744px - 144px) / 2)",
+          // marginTop: "calc((100vh - 744px) / 2 + (744px - 144px) / 2)",
         }}
       >
         {/* 헤더 */}
@@ -65,7 +67,7 @@ export default function SuccessModal({
         <div className="flex justify-center">
           <button
             type="button"
-            onClick={handleClose}
+            onClick={onConfirm}
             className="w-[208px] h-[36px] rounded-[8px] text-white text-sm font-semibold transition
                        bg-point hover:bg-[#4C6953] cursor-pointer"
           >
