@@ -61,13 +61,13 @@ export default function ToDoPage() {
 
       <div className="flex-1 overflow-y-auto px-4 pt-6 pb-32">
         {/* 그룹명 */}
-        <div className="text-sm text-point font-medium mb-2">
+        <div className="text-[14px] font-semibold text-point font-medium mb-2">
           {todoData.groupName}
         </div>
 
         {/* 할 일 제목 */}
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-black1 flex-1">
+        <div className="flex items-center justify-between mb-1">
+          <h2 className="text-[18px] font-semibold text-black1 flex-1">
             {todoData.title}
           </h2>
           <span className="text-sm font-semibold text-point ml-2">
@@ -76,26 +76,23 @@ export default function ToDoPage() {
         </div>
 
         {/* 완료 기한 */}
-        <div className="text-sm text-gray4 mb-4">
+        <div className="text-[12px] font-regular text-gray4 mb-2">
           완료 기한: {todoData.dueDate}
         </div>
 
         {/* 진행률 바 */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-black1">진행률 {progress}%</span>
-          </div>
-          <div className="w-full h-2 bg-gray1 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-point transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
+          <div className="flex w-full gap-2 items-center h-5">
+            <span className="text-[14px] font-semibold text-point whitespace-nowrap">진행률 {Math.round(progress)}%</span>
+            <div className="w-full h-[4px] bg-main2 overflow-hidden">
+              <div className="h-full bg-point" style={{ width: `${progress}%` }}></div>
+            </div>
           </div>
         </div>
 
         {/* 완료 멤버 */}
         <div className="mb-6">
-          <div className="flex items-center justify-between mb-3">
+          <div className="border-t border-b border-main4 bg-main4/30 flex items-center justify-between px-4 py-3 mb-3 -mx-4">
             <h3 className="text-base font-bold text-black1">완료 멤버</h3>
             <span className="text-sm font-medium text-point">
               {completedMembers.length}명
@@ -127,7 +124,7 @@ export default function ToDoPage() {
 
         {/* 미완료 멤버 */}
         <div>
-          <div className="flex items-center justify-between mb-3">
+          <div className="border-t border-b border-main4 bg-main4/30 flex items-center justify-between px-4 py-3 mb-3 -mx-4">
             <h3 className="text-base font-bold text-black1">미완료 멤버</h3>
             <span className="text-sm font-medium text-point">
               {incompleteMembers.length}명
@@ -151,17 +148,17 @@ export default function ToDoPage() {
 
       {/* 하단 버튼/배너 */}
       {isCompleted ? (
-        <div className="absolute bottom-0 left-0 right-0 bg-main2 rounded-t-[20px] px-4 py-4">
-          <div className="text-center text-white text-base font-medium">
+        <div className="pt-4 pb-0 mt-auto">
+          <div className="w-full h-14 bg-main2 text-white text-base font-semibold flex items-center justify-center">
             To-Do를 완료하였습니다.
           </div>
         </div>
       ) : (
-        <div className="absolute bottom-0 left-0 right-0 bg-white px-4 py-4">
+        <div className="pt-4 pb-0 mt-auto">
           <button
             type="button"
             onClick={() => setShowCompleteModal(true)}
-            className="w-full h-12 rounded-lg bg-point text-white text-base font-semibold hover:bg-[#4C6953] transition"
+            className="w-full h-14 bg-point text-white text-base font-semibold hover:bg-[#4C6953] transition"
           >
             To-Do 완료하기
           </button>
