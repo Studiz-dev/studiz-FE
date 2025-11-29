@@ -24,6 +24,14 @@ export default function SuccessModal({
     onClose();
   };
 
+  const handleConfirm = () => {
+    if (onConfirm) {
+      onConfirm();
+    } else {
+      onClose();
+    }
+  };
+
   return (
     <>
       {/* 오버레이 */}
@@ -67,7 +75,7 @@ export default function SuccessModal({
         <div className="flex justify-center">
           <button
             type="button"
-            onClick={onConfirm}
+            onClick={handleConfirm}
             className="w-[208px] h-[36px] rounded-[8px] text-white text-sm font-semibold transition
                        bg-point hover:bg-[#4C6953] cursor-pointer"
           >

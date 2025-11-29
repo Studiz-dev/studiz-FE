@@ -1,5 +1,6 @@
 // src/pages/GroupPage.tsx
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import book from "../assets/book.svg";
 import SortBottomSheet from "../components/SortBottomSheet.tsx";
 import AddGroupModal from "../components/AddGroupModal.tsx";
@@ -13,6 +14,7 @@ import Header from "../components/Header";
 
 
 export default function GroupPage() {
+  const navigate = useNavigate();
   const [studyGroups, setStudyGroups] = useState<StudyGroup[]>([]);
   const [sortOrder, setSortOrder] = useState<SortOrder>("최신순");
 
@@ -96,14 +98,15 @@ export default function GroupPage() {
                 {sortedGroups.map((group) => (
                   <div
                     key={group.id}
-                    className="bg-white rounded-[15px] p-3 border border-[1.5px] border-main2 shadow-sm w-full"
+                    onClick={() => navigate("/GroupHome")}
+                    className="bg-white rounded-[15px] p-3 border border-[1.5px] border-main2 shadow-sm w-full cursor-pointer hover:bg-gray-50 transition"
                   >
                     <div className="text-sm text-point font-medium">
                       {group.category}
                     </div>
                     <div className="text-lg font-semibold text-black1 mb-0.5">
                         {group.title}
-                      </div>
+                    </div>
                     <div className="mb-1 flex gap-2 items-center">
                       <span className="flex items-center">
                         <span className="text-xs text-gray3">스터디장</span>
