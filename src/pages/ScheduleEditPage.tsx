@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
 
 export default function ScheduleEditPage() {
   const navigate = useNavigate();
   
-  // 날짜 데이터 (9/1 월 ~ 9/5 금)
+  // 날짜 데이터 (월~금)
   const dates = [
     { day: "월", date: "1", fullDate: "9/1 월" },
     { day: "화", date: "2", fullDate: "9/2 화" },
@@ -13,32 +14,25 @@ export default function ScheduleEditPage() {
     { day: "금", date: "5", fullDate: "9/5 금" },
   ];
   
+  const [selectedDate, setSelectedDate] = useState("9/4 목"); // 기본 선택 날짜
+  const [selectedTimes, setSelectedTimes] = useState<Set<string>>(new Set());
+  
   // 시간 슬롯 (0시부터 23시까지)
   const timeSlots = [];
   for (let hour = 0; hour <= 23; hour++) {
     timeSlots.push({ hour, minute: 0 });
   }
   
-  const [selectedDate, setSelectedDate] = useState("9/4 목"); // 기본 선택 날짜
-  const [selectedTimes, setSelectedTimes] = useState<Set<string>>(new Set());
-  
   // 시간 토글
-  const toggleTime = (date: string, hour: number, minute: number) => {
-    const timeKey = `${date}-${hour}-${minute}`;
-    const newSelected = new Set(selectedTimes);
-    
-    if (newSelected.has(timeKey)) {
-      newSelected.delete(timeKey);
+  const handleTimeToggle = (hour: number, minute: number) => {
+    const timeKey = `${selectedDate}-${hour}-${minute}`;
+    const newSelectedTimes = new Set(selectedTimes);
+    if (newSelectedTimes.has(timeKey)) {
+      newSelectedTimes.delete(timeKey);
     } else {
-      newSelected.add(timeKey);
+      newSelectedTimes.add(timeKey);
     }
-    
-    setSelectedTimes(newSelected);
-  };
-  
-  // 선택된 시간인지 확인
-  const isTimeSelected = (date: string, hour: number, minute: number) => {
-    return selectedTimes.has(`${date}-${hour}-${minute}`);
+    setSelectedTimes(newSelectedTimes);
   };
   
   // 저장하기
@@ -48,27 +42,16 @@ export default function ScheduleEditPage() {
     // TODO: 저장 로직 구현
     navigate(-1); // 이전 페이지로 돌아가기
   };
-  
+
   return (
-    <div className="flex flex-col h-full bg-white">
-      {/* 헤더 */}
-      <div className="relative flex items-center justify-center h-[60px] bg-white border-b-[1.5px] border-main4 px-4">
-        <button
-          onClick={() => navigate(-1)}
-          className="absolute left-2 p-2"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-        <h1 className="text-lg font-semibold text-black1">시간 등록/수정하기</h1>
-      </div>
+    <div className="flex flex-col h-full bg-white relative">
+      <Header title="시간 등록/수정하기" backPath="/Schedule" showBorder={false} />
       
       <div className="flex-1 overflow-y-auto px-4 pt-6 pb-24">
         {/* 날짜 선택 */}
-        <div className="mb-8">
+        <div className="mb-6">
           <h2 className="text-base font-bold text-black1 mb-4">날짜 선택</h2>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2">
             {/* 요일 */}
             <div className="flex gap-2">
               {dates.map((date) => (
@@ -102,22 +85,25 @@ export default function ScheduleEditPage() {
           <h2 className="text-base font-bold text-black1 mb-4">시간 선택</h2>
           <div className="grid grid-cols-4 gap-2">
             {timeSlots.map((timeSlot) => {
-              const timeStr = `${String(timeSlot.hour).padStart(2, "0")}:${String(timeSlot.minute).padStart(2, "0")}`;
-              const isSelected = isTimeSelected(selectedDate, timeSlot.hour, timeSlot.minute);
+              const timeKey = `${selectedDate}-${timeSlot.hour}-${timeSlot.minute}`;
+              const isSelected = selectedTimes.has(timeKey);
               
               return (
                 <button
                   key={`${timeSlot.hour}-${timeSlot.minute}`}
                   type="button"
-                  onClick={() => toggleTime(selectedDate, timeSlot.hour, timeSlot.minute)}
-                  className={`h-12 rounded-lg text-sm font-medium transition ${
-                    isSelected
-                      ? "border-2 border-point text-point"
-                      : "bg-white border border-gray1 text-black1"
-                  }`}
-                  style={isSelected ? { backgroundColor: "#FBFEFA" } : {}}
+                  onClick={() => handleTimeToggle(timeSlot.hour, timeSlot.minute)}
+                  className={`
+                    w-full h-10 rounded-lg text-base font-medium transition
+                    ${
+                      isSelected
+                        ? "border-2 border-point text-point"
+                        : "bg-white border border-gray1 text-black1"
+                    }
+                  `}
+                  style={{ backgroundColor: isSelected ? "#FBFEFA" : "" }}
                 >
-                  {timeStr}
+                  {String(timeSlot.hour).padStart(2, "0")}:{String(timeSlot.minute).padStart(2, "0")}
                 </button>
               );
             })}

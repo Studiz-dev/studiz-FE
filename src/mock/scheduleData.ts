@@ -23,7 +23,7 @@ const generateMembers = (dates: string[], timeSlots: TimeSlot[]): ScheduleMember
     { id: 6, name: "한소영", availability: {} },
   ];
 
-  // 각 멤버의 시간대별 가능 여부 설정
+  // 각 멤버의 시간대별 가능 여부 초기화 (모두 false로 시작)
   dates.forEach((date) => {
     timeSlots.forEach((timeSlot) => {
       members.forEach((member) => {
@@ -33,46 +33,62 @@ const generateMembers = (dates: string[], timeSlots: TimeSlot[]): ScheduleMember
         if (!member.availability[date]) {
           member.availability[date] = {};
         }
-        // 랜덤하게 가능/불가능 설정 (예시)
-        // 실제로는 각 멤버의 스케줄에 따라 설정
-        const isAvailable = Math.random() > 0.3; // 70% 확률로 가능
-        member.availability[date][timeSlot.hour] = isAvailable;
+        // 기본값은 false (불가능)
+        member.availability[date][timeSlot.hour] = false;
       });
     });
   });
 
-  // 예시: 특정 멤버들의 특정 시간대 설정
-  // 김철수: 9/1 월 9시~12시 가능, 13시~18시 가능
-  if (members[0].availability && members[0].availability["9/1 월"]) {
-    members[0].availability["9/1 월"][9] = true;
-    members[0].availability["9/1 월"][10] = true;
-    members[0].availability["9/1 월"][11] = true;
-    members[0].availability["9/1 월"][12] = true;
-    members[0].availability["9/1 월"][13] = true;
-    members[0].availability["9/1 월"][14] = true;
-    members[0].availability["9/1 월"][15] = true;
-    members[0].availability["9/1 월"][16] = true;
-    members[0].availability["9/1 월"][17] = true;
-    members[0].availability["9/1 월"][18] = true;
+  // 각 멤버별 고정된 가능 시간 설정
+  // 김철수: 9/1 월 9시~18시 가능
+  if (members[0].availability) {
+    if (!members[0].availability["9/1 월"]) members[0].availability["9/1 월"] = {};
+    for (let hour = 9; hour <= 18; hour++) {
+      members[0].availability["9/1 월"][hour] = true;
+    }
   }
 
   // 이영희: 9/1 월 14시~17시 가능
-  if (members[1].availability && members[1].availability["9/1 월"]) {
-    members[1].availability["9/1 월"][14] = true;
-    members[1].availability["9/1 월"][15] = true;
-    members[1].availability["9/1 월"][16] = true;
-    members[1].availability["9/1 월"][17] = true;
+  if (members[1].availability) {
+    if (!members[1].availability["9/1 월"]) members[1].availability["9/1 월"] = {};
+    for (let hour = 14; hour <= 17; hour++) {
+      members[1].availability["9/1 월"][hour] = true;
+    }
   }
 
   // 박민수: 9/1 월 9시~11시, 15시~18시 가능
-  if (members[2].availability && members[2].availability["9/1 월"]) {
-    members[2].availability["9/1 월"][9] = true;
-    members[2].availability["9/1 월"][10] = true;
-    members[2].availability["9/1 월"][11] = true;
-    members[2].availability["9/1 월"][15] = true;
-    members[2].availability["9/1 월"][16] = true;
-    members[2].availability["9/1 월"][17] = true;
-    members[2].availability["9/1 월"][18] = true;
+  if (members[2].availability) {
+    if (!members[2].availability["9/1 월"]) members[2].availability["9/1 월"] = {};
+    for (let hour = 9; hour <= 11; hour++) {
+      members[2].availability["9/1 월"][hour] = true;
+    }
+    for (let hour = 15; hour <= 18; hour++) {
+      members[2].availability["9/1 월"][hour] = true;
+    }
+  }
+
+  // 정수진: 9/2 화 10시~13시 가능
+  if (members[3].availability) {
+    if (!members[3].availability["9/2 화"]) members[3].availability["9/2 화"] = {};
+    for (let hour = 10; hour <= 13; hour++) {
+      members[3].availability["9/2 화"][hour] = true;
+    }
+  }
+
+  // 최동욱: 9/3 수 11시~14시 가능
+  if (members[4].availability) {
+    if (!members[4].availability["9/3 수"]) members[4].availability["9/3 수"] = {};
+    for (let hour = 11; hour <= 14; hour++) {
+      members[4].availability["9/3 수"][hour] = true;
+    }
+  }
+
+  // 한소영: 9/4 목 12시~15시 가능
+  if (members[5].availability) {
+    if (!members[5].availability["9/4 목"]) members[5].availability["9/4 목"] = {};
+    for (let hour = 12; hour <= 15; hour++) {
+      members[5].availability["9/4 목"][hour] = true;
+    }
   }
 
   return members;
@@ -97,8 +113,8 @@ const generateCells = (dates: string[], timeSlots: TimeSlot[], maxMembers: numbe
         }
       });
       
-      // 등록된 멤버 수는 가능한 멤버 중 일부가 등록한 것으로 가정
-      const registeredMembers = Math.min(availableMembers.length, Math.floor(Math.random() * (maxMembers + 1)));
+      // 등록된 멤버 수는 가능한 멤버 수와 동일 (모든 가능한 멤버가 등록한 것으로 가정)
+      const registeredMembers = availableMembers.length;
       
       cells.push({
         date,
@@ -116,8 +132,8 @@ const generateCells = (dates: string[], timeSlots: TimeSlot[], maxMembers: numbe
 };
 
 const timeSlots = generateTimeSlots();
+const maxMembers = 6; // 멤버 수에 맞춰 6명으로 설정
 const allMembers = generateMembers(dates, timeSlots);
-const maxMembers = allMembers.length; // 멤버 배열의 길이로 자동 설정
 
 export const mockScheduleData: ScheduleData = {
   id: 1,
