@@ -9,6 +9,10 @@ import MemberPage from "./pages/MemberPage";
 import CreateToDoPage from "./pages/CreateToDoPage";
 import CreateSchedulePage from "./pages/CreateSchedulePage";
 import GroupHomePage from "./pages/GroupHomePage";
+import ToDoPage from "./pages/ToDoPage";
+import SchedulePage from "./pages/SchedulePage";
+import ScheduleEditPage from "./pages/ScheduleEditPage";
+import ScheduleConfirmPage from "./pages/ScheduleConfirmPage";
 import "./index.css";
 
 import BottomNav from "./components/BottomNav";
@@ -44,6 +48,10 @@ export default function App() {
 
             <Route path="/CreateToDo" element={<CreateToDoPage />} />
             <Route path="/CreateSchedule" element={<CreateSchedulePage />} />
+            <Route path="/ToDo" element={<ToDoPage />} />
+            <Route path="/Schedule" element={<SchedulePage />} />
+            <Route path="/ScheduleEdit" element={<ScheduleEditPage />} />
+            <Route path="/ScheduleConfirm" element={<ScheduleConfirmPage />} />
             <Route path="*" element={<div>404</div>} />
           </Routes>
         </main>

@@ -18,9 +18,9 @@ body,
   background: #f3f4f6;
   /* 데스크톱에서만 가운데 정렬 */
   @media (min-width: 768px) {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
     overflow: auto;
   }
 }
