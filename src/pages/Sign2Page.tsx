@@ -1,27 +1,70 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { AxiosError } from "axios";
+import { updateUser } from "@/services/auth.service";
 import edit from "../assets/edit.svg";
 import Header from "../components/Header";
 
 export default function Sign2Page() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [name, setName] = useState("");
+  const [nameError, setNameError] = useState("");
   const [image, setImage] = useState<string | null>(null);
+  // const [imageFile, setImageFile] = useState<File | null>(null); // 이미지 파일 상태
+
+  const userId = location.state?.userId;
+
+  // userId가 없으면 1단계로 돌려보냄
+  useEffect(() => {
+    if (!userId) {
+      alert("잘못된 접근입니다. 가입 1단계부터 다시 진행해주세요.");
+      navigate("/sign1");
+    }
+  }, [userId, navigate]);
 
   const isDisabled = name.trim() === "";
 
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // setImageFile(file);
       setImage(URL.createObjectURL(file)); // 미리보기
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (isDisabled) return;
+
+    // 이름 유효성 검사 (2-50자)
+    if (name.trim().length < 2 || name.trim().length > 50) {
+      setNameError("2-50자의 이름을 입력하세요.");
+      console.log("유효하지 않다");
+      return;
+    }
+    setNameError("");
+
+    try {
+      await updateUser(userId, { name });
+      navigate("/done");
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 400) {
+          console.log("[ERROR 400] 이름 유효성 검사 실패:", error.response.data);
+          // 백엔드에서 오는 특정 메시지가 있다면 여기서 setNameError로 설정 가능
+          setNameError("이름이 유효하지 않습니다. (서버오류)");
+          return;
+        }
+      }
+      console.error("⚠ 이름 업데이트 실패:", error);
+      setNameError("이름 업데이트 중 오류가 발생했습니다.");
+    }
+  };
+
   return (
-    /*상단 헤더*/
     <div className="flex flex-col h-full bg-white">
       <Header title="가입하기" backPath="/sign1" showBorder={false} />
-      {/*스텝 표시*/}
       <div className="flex justify-center mt-8">
         <div className="flex justify-center items-center w-8 h-8 rounded-full bg-main1 text-white font-semibold">
           1
@@ -31,9 +74,11 @@ export default function Sign2Page() {
           2
         </div>
       </div>
-      <div className="flex flex-col justify-center items-center mt-16">
-        <div className="relative w-28 h-28">
-          {/* 이미지 미리보기 */}
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col items-center w-full"
+      >
+        <div className="relative w-28 h-28 mt-16">
           {image ? (
             <img
               src={image}
@@ -44,7 +89,6 @@ export default function Sign2Page() {
             <div className="w-28 h-28 rounded-full border-4 border-point bg-gray-200" />
           )}
 
-          {/* 연필 아이콘 */}
           <label className="absolute bottom-1 right-1 bg-point w-6 h-6 rounded-full flex justify-center items-center cursor-pointer">
             <img src={edit} alt="edit" className="w-3 h-3" />
             <input
@@ -62,7 +106,10 @@ export default function Sign2Page() {
           <input
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value);
+              if (nameError) setNameError(""); // 입력 시작하면 에러 메시지 제거
+            }}
             placeholder="사용하실 이름을 입력해 주세요"
             className="
             w-full h-12 rounded-lg border-2
@@ -72,10 +119,12 @@ export default function Sign2Page() {
             transition
           "
           />
+          {nameError && (
+            <p className="text-red-500 text-sm mt-1">{nameError}</p>
+          )}
           <button
             type="submit"
             disabled={isDisabled}
-            onClick={() => navigate("/done")}
             className={`
             w-full h-12 rounded-lg mt-[84px] text-white text-[18px] font-semibold
             ${
@@ -88,7 +137,7 @@ export default function Sign2Page() {
             다음으로
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

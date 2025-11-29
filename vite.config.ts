@@ -1,12 +1,15 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import svgr from 'vite-plugin-svgr'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import svgr from "vite-plugin-svgr";
 
 export default defineConfig({
   plugins: [react(), svgr()],
-  server: {
-    watch: {
-      usePolling: true,
-    },
+  resolve: {
+    alias: {
+      "@": "/src"        // ★ 이게 정답 ★
+    }
   },
-})
+  server: {
+    watch: { usePolling: true }
+  }
+});

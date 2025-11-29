@@ -3,35 +3,64 @@ import { useNavigate } from "react-router-dom";
 import open from "../assets/open.svg";
 import close from "../assets/close.svg";
 import Header from "../components/Header";
+import { register } from "@/services/auth.service";
+import type { RegisterRequest } from "@/types/auth";
+import { AxiosError } from "axios";
 
 export default function Sign1Page() {
   const navigate = useNavigate();
+
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
   const [pwc, setPwc] = useState("");
   const [show, setShow] = useState(false);
-  const [error, setError] = useState("");
+
+  const [errorPw, setErrorPw] = useState("");
+  const [errorId, setErrorId] = useState("");
 
   const isDisabled =
     id.trim() === "" || pw.trim() === "" || pwc.trim() === "" || pw !== pwc;
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isDisabled) return;
 
     if (pw !== pwc) {
-      setError("비밀번호가 일치하지 않습니다.");
+      setErrorPw("비밀번호가 일치하지 않습니다.");
       return;
     }
-    setError("");
-    console.log({ id, pw });
+    setErrorPw("");
+    setErrorId("");
+
+    const body: RegisterRequest = {
+      loginId: id,
+      password: pw,
+      name: "이름미정",
+    };
+
+    try {
+      const res = await register(body);
+      console.log("ID/PW 등록 성공", res);
+      navigate("/sign2", { state: { userId: res.id } });
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 409) {
+          setErrorId("[ERROR 409] 이미 사용 중인 아이디입니다.");
+          return;
+        }
+        if (error.response?.status === 400) {
+          console.log("[ERROR 400] ID/PW 유효성 검사 실패:", error.response.data);
+          return;
+        }
+      }
+      console.log("기타 오류:", error);
+    }
   };
 
   return (
-    /*상단 헤더*/
     <div className="flex flex-col h-full bg-white">
       <Header title="가입하기" backPath="/" showBorder={false} />
-      {/*스텝 표시*/}
+
       <div className="flex justify-center mt-8">
         <div className="flex justify-center items-center w-8 h-8 rounded-full bg-main1 text-white font-semibold">
           1
@@ -41,16 +70,18 @@ export default function Sign1Page() {
           2
         </div>
       </div>
-      {/*아이디, 비밀번호 입력*/}
+
       <form onSubmit={onSubmit} className="w-full max-w-sm mx-auto px-3 pt-16 pb-10">
-        {/* 아이디 */}
-        <label className="block font-medium text-base text-gray4 mb-2">
-          아이디
-        </label>
+
+        <label className="block font-medium text-base text-gray4 mb-2">아이디</label>
+
         <input
           type="text"
           value={id}
-          onChange={(e) => setId(e.target.value)}
+          onChange={(e) => {
+            setId(e.target.value);
+            setErrorId("");
+          }}
           placeholder="아이디를 입력해 주세요"
           className="
             w-full h-12 rounded-lg border-2
@@ -61,7 +92,10 @@ export default function Sign1Page() {
           "
         />
 
-        {/* 비밀번호 */}
+        {errorId && (
+          <p className="text-red-500 text-sm mt-1">{errorId}</p>
+        )}
+
         <label className="block font-medium text-base text-gray4 mt-6 mb-2">
           비밀번호
         </label>
@@ -77,36 +111,27 @@ export default function Sign1Page() {
           <input
             type={show ? "text" : "password"}
             value={pw}
-            onChange={(e) => setPw(e.target.value)}
-            className="flex-1 bg-transparent outline-none font-normal tracking-wider placeholder:text-[#505050] font-normal
-            transition"
+            onChange={(e) => {
+              setPw(e.target.value);
+              setErrorPw("");
+            }}
+            className="flex-1 bg-transparent outline-none font-normal tracking-wider placeholder:text-[#505050] transition"
             placeholder="비밀번호를 입력해주세요."
           />
+
           <button
             type="button"
             onClick={() => setShow((s) => !s)}
-            aria-label={show ? "비밀번호 가리기" : "비밀번호 보기"}
             className="ml-3 p-2 rounded-md hover:bg-gray-100"
           >
-            {/* 눈가림 아이콘 */}
-            {show ? (
-              // eye
-              <img
-                src={open}
-                alt="Open"
-                className="w-[24px] h-auto translate-x-2"
-              />
-            ) : (
-              // eye-off
-              <img
-                src={close}
-                alt="Close"
-                className="w-[22px] h-auto translate-x-1.5"
-              />
-            )}
+            <img
+              src={show ? open : close}
+              alt="Toggle"
+              className={show ? "w-[24px] translate-x-2" : "w-[22px] translate-x-1.5"}
+            />
           </button>
         </div>
-        {/* 비밀번호 확인 */}
+
         <label className="block font-medium text-base text-gray4 mt-6 mb-2">
           비밀번호 확인
         </label>
@@ -125,47 +150,23 @@ export default function Sign1Page() {
             onChange={(e) => {
               setPwc(e.target.value);
               if (pw && e.target.value && pw !== e.target.value) {
-                setError("비밀번호가 일치하지 않습니다.");
+                setErrorPw("비밀번호가 일치하지 않습니다.");
               } else {
-                setError("");
+                setErrorPw("");
               }
             }}
             className="flex-1 bg-transparent outline-none font-normal tracking-wider placeholder:text-[#505050] transition"
             placeholder="비밀번호를 한번 더 입력해주세요."
           />
-          <button
-            type="button"
-            onClick={() => setShow((s) => !s)}
-            aria-label={show ? "비밀번호 가리기" : "비밀번호 보기"}
-            className="ml-3 p-2 rounded-md hover:bg-gray-100"
-          >
-            {/* 눈가림 아이콘 */}
-            {show ? (
-              // eye
-              <img
-                src={open}
-                alt="Open"
-                className="w-[24px] h-auto translate-x-2"
-              />
-            ) : (
-              // eye-off
-              <img
-                src={close}
-                alt="Close"
-                className="w-[22px] h-auto translate-x-1.5"
-              />
-            )}
-          </button>
         </div>
-        {/* 에러메시지 */}
-        <div className="h-5 mt-2">
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-        </div>
-        {/* 로그인 버튼 */}
+
+        {errorPw && (
+          <p className="text-red-500 text-sm mt-1">{errorPw}</p>
+        )}
+
         <button
           type="submit"
           disabled={isDisabled}
-          onClick={() => navigate("/sign2")}
           className={`
             w-full h-12 rounded-lg mt-10 text-white text-[18px] font-semibold
             ${isDisabled
