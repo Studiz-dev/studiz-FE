@@ -26,7 +26,7 @@ export default function ActionMenu({
       />
 
       {/* 동그란 플로팅 메뉴들 */}
-      <div className="absolute bottom-28 right-4 z-20 flex flex-col items-end mb-[70px] gap-3">
+      <div className="fixed bottom-[180px] right-4 z-20 flex flex-col items-end gap-3">
         {/* 그룹 입장하기 */}
         <button
           onClick={onJoinGroup}

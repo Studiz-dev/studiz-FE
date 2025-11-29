@@ -132,13 +132,15 @@ const generateCells = (dates: string[], timeSlots: TimeSlot[], maxMembers: numbe
 };
 
 const timeSlots = generateTimeSlots();
-const maxMembers = 6; // 멤버 수에 맞춰 6명으로 설정
 const allMembers = generateMembers(dates, timeSlots);
+const maxMembers = allMembers.length; // 멤버 수에 맞춰 동적으로 설정
 
 export const mockScheduleData: ScheduleData = {
   id: 1,
   location: "융복합관 B101",
   studyName: "진탐 스터디",
+  year: 2025,
+  month: 9,
   dates,
   timeSlots,
   maxMembers,

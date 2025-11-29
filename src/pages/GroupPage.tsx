@@ -128,7 +128,7 @@ export default function GroupPage() {
       <button
         onClick={() => setShowFabMenu(!showFabMenu)}
         aria-label="메뉴 열기"
-        className="absolute bottom-28 right-4 w-14 h-14 rounded-full bg-main1 text-white shadow-lg
+        className="fixed bottom-28 right-4 w-14 h-14 rounded-full bg-main1 text-white shadow-lg
                    flex items-center justify-center text-3xl font-light z-30"
       >
 
