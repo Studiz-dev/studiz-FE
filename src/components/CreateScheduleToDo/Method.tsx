@@ -17,7 +17,7 @@ export default function Method({ selectedMethods, setSelectedMethods }: MethodPr
       <h1 className="text-[16px] font-semibold text-black1">
         인증 방식
       </h1>
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-2">
         <div className="flex items-center h-8 gap-2">
           <CheckBox onClick={() => toggleMethod("file")}
             className={`w-6 h-6 cursor-pointer ${selectedMethods.file ? "text-point" : "text-main3"}`} />

@@ -27,4 +27,5 @@ export interface ScheduleData {
   timeSlots: TimeSlot[]; // 시간대 목록
   maxMembers: number; // 최대 인원
   cells: ScheduleCell[]; // 모든 셀 데이터
+
 }
