@@ -8,7 +8,9 @@ import ActionMenu from "../components/ActionMenu.tsx";
 import SuccessModal from "../components/SuccessModal.tsx";
 import type { StudyGroup, SortOrder } from "../types/group";
 import { findGroupByCode } from "../mock/groupData";
-import plus from "../assets/plus.svg";
+import Plus from "../assets/plus.svg?react";
+import Header from "../components/Header";
+
 
 export default function GroupPage() {
   const [studyGroups, setStudyGroups] = useState<StudyGroup[]>([]);
@@ -127,7 +129,9 @@ export default function GroupPage() {
         className="absolute bottom-28 right-4 w-14 h-14 rounded-full bg-main1 text-white shadow-lg
                    flex items-center justify-center text-3xl font-light z-30"
       >
-         <img src={plus} alt="plus" className="w-5 h-5" />
+
+        <Plus className="w-5 h-5 text-white" />
+
       </button>
 
       {/* 액션 메뉴 */}
