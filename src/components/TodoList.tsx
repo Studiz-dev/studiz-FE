@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { todoGroups as initialTodoGroups } from "../mock/scheduleTodoData";
 import type { TodoGroup } from "../types/todo";
-
 import CheckBox from "../assets/CheckBox.svg?react";
 
 export default function TodoList() {

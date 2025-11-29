@@ -123,17 +123,16 @@ export default function ScheduleConfirmPage() {
             <span className="text-sm text-black1">
               0/{scheduleData.maxMembers} 명 가능
             </span>
-            {/* 진행률 바 - 가능한 멤버 수에 따라 point 컬러 투명도 조절 (0~6명, 7칸) */}
+            {/* 진행률 바 - 가능한 멤버 수에 따라 point 컬러 투명도 조절 (멤버수 + 1개) */}
             <div className="flex-1 flex gap-1">
-              {Array.from({ length: 7 }).map((_, index) => {
-                // 0명부터 6명까지 7칸: index는 0~6
-                // 각 세그먼트는 index / 6 비율까지 채워져야 함
-                const segmentThreshold = index / 6;
+              {Array.from({ length: scheduleData.maxMembers + 1 }).map((_, index) => {
+                // 0명부터 maxMembers명까지 (maxMembers + 1)칸: index는 0~maxMembers
+                // 각 세그먼트는 index / maxMembers 비율까지 채워져야 함
+                const segmentThreshold = index / scheduleData.maxMembers;
                 const isFilled = progressRatio >= segmentThreshold;
                 
-                // 각 세그먼트의 투명도 계산: index / 7로 7단계로 나눔
-                // 0명 = 0/7 = 0%, 1명 = 1/7 = 14.29%, 2명 = 2/7 = 28.57%, ..., 6명 = 6/7 = 85.71%
-                const segmentOpacity = index / 7;
+                // 각 세그먼트의 투명도 계산: index / (maxMembers + 1)로 단계로 나눔
+                const segmentOpacity = index / (scheduleData.maxMembers + 1);
                 
                 return (
                   <div
@@ -224,8 +223,10 @@ export default function ScheduleConfirmPage() {
             
             if (!displayCell) {
               return (
-                <div className="bg-white rounded-lg border-2 border-gray1 p-4 shadow-lg">
-                  <div className="flex gap-4">
+                <div className="bg-white rounded-lg border border-gray1 p-4 relative">
+                  {/* 위쪽 연한 녹색 줄 */}
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-[#CAE8BD] rounded-t-lg"></div>
+                  <div className="flex gap-4 mt-1">
                     <div className="flex-1">
                       <div className="text-xs text-gray4 mb-2">가능</div>
                       <div className="flex flex-col gap-1 min-h-[120px]">
@@ -265,9 +266,11 @@ export default function ScheduleConfirmPage() {
               selectedCell?.timeSlot.minute === displayCell.timeSlot.minute;
             
             return (
-              <div className="bg-white rounded-lg border-2 p-4">
-                <div className="flex items-start justify-between mb-2">
-                  <div className="text-sm text-black1">
+              <div className="bg-white rounded-lg border border-gray1 p-4 relative">
+                {/* 위쪽 연한 녹색 줄 */}
+                <div className="absolute top-0 left-0 right-0 h-1 bg-[#CAE8BD] rounded-t-lg"></div>
+                <div className="flex items-start justify-between mb-2 mt-1">
+                  <div className="text-base font-semibold text-black1">
                     {availableCount}/{cell.maxMembers}명 가능
                   </div>
                   <button

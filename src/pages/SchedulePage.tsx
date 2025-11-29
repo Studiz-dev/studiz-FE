@@ -6,22 +6,7 @@ import type { TimeSlot } from "../types/schedule";
 export default function SchedulePage() {
   const navigate = useNavigate();
   const [scheduleData] = useState(mockScheduleData);
-  const [selectedCells, setSelectedCells] = useState<Set<string>>(new Set());
   const [hoveredCell, setHoveredCell] = useState<{ date: string; timeSlot: TimeSlot } | null>(null);
-  
-  // 셀 클릭 핸들러
-  const handleCellClick = (date: string, timeSlot: TimeSlot) => {
-    const cellKey = `${date}-${timeSlot.hour}-${timeSlot.minute}`;
-    const newSelected = new Set(selectedCells);
-    
-    if (newSelected.has(cellKey)) {
-      newSelected.delete(cellKey);
-    } else {
-      newSelected.add(cellKey);
-    }
-    
-    setSelectedCells(newSelected);
-  };
 
   // 셀 색상 계산 - 가능한 멤버 수에 따라 point 컬러 투명도 조절 (0%부터 100%)
   const getCellStyle = (availableCount: number, maxMembers: number) => {
@@ -67,24 +52,23 @@ export default function SchedulePage() {
       <div className="flex-1 overflow-y-auto px-4 pt-4 pb-24 relative">
         {/* 시간 등록 현황 */}
         <div className="mb-4">
-          <div className="text-sm text-black1 underline decoration-blue-500 mb-2">
+          <div className="text-sm text-black1 mb-2">
             시간 등록 현황
           </div>
           <div className="flex items-center gap-2 mb-2">
             <span className="text-sm text-black1">
               0/{scheduleData.maxMembers} 명 가능
             </span>
-            {/* 진행률 바 - 가능한 멤버 수에 따라 point 컬러 투명도 조절 (0~6명, 7칸) */}
+            {/* 진행률 바 - 가능한 멤버 수에 따라 point 컬러 투명도 조절 (멤버수 + 1개) */}
             <div className="flex-1 flex gap-1">
-              {Array.from({ length: 7 }).map((_, index) => {
-                // 0명부터 6명까지 7칸: index는 0~6
-                // 각 세그먼트는 index / 6 비율까지 채워져야 함
-                const segmentThreshold = index / 6;
+              {Array.from({ length: scheduleData.maxMembers + 1 }).map((_, index) => {
+                // 0명부터 maxMembers명까지 (maxMembers + 1)칸: index는 0~maxMembers
+                // 각 세그먼트는 index / maxMembers 비율까지 채워져야 함
+                const segmentThreshold = index / scheduleData.maxMembers;
                 const isFilled = progressRatio >= segmentThreshold;
                 
-                // 각 세그먼트의 투명도 계산: index / 7로 7단계로 나눔
-                // 0명 = 0/7 = 0%, 1명 = 1/7 = 14.29%, 2명 = 2/7 = 28.57%, ..., 6명 = 6/7 = 85.71%
-                const segmentOpacity = index / 7;
+                // 각 세그먼트의 투명도 계산: index / (maxMembers + 1)로 단계로 나눔
+                const segmentOpacity = index / (scheduleData.maxMembers + 1);
                 
                 return (
                   <div
@@ -142,17 +126,12 @@ export default function SchedulePage() {
                       
                       const availableCount = cell.availableMembers?.length || 0;
                       const cellStyle = getCellStyle(availableCount, cell.maxMembers);
-                      const cellKey = `${date}-${timeSlot.hour}-${timeSlot.minute}`;
-                      const isSelected = selectedCells.has(cellKey);
                       
                       return (
                         <td
                           key={date}
-                          className={`p-0.5 border border-gray1 cursor-pointer relative ${
-                            isSelected ? "ring-2 ring-point ring-offset-1" : ""
-                          }`}
+                          className="p-0.5 border border-gray1 cursor-pointer relative"
                           style={cellStyle}
-                          onClick={() => handleCellClick(date, timeSlot)}
                           onMouseEnter={() => setHoveredCell({ date, timeSlot })}
                           onMouseLeave={() => setHoveredCell(null)}
                         />
@@ -167,63 +146,32 @@ export default function SchedulePage() {
 
         {/* 가능/불가능 정보 - 시간표 아래 고정 (항상 공간 차지) */}
         <div className="mt-4 mb-4">
-          {(() => {
-            // 선택된 셀이 있으면 우선 표시, 없으면 호버된 셀 표시
-            let displayCell = null;
-            
-            if (selectedCells.size > 0) {
-              // 선택된 셀 중 첫 번째 셀 찾기
-              const firstSelectedKey = Array.from(selectedCells)[0];
-              const [date, hour, minute] = firstSelectedKey.split("-");
-              displayCell = { date, timeSlot: { hour: parseInt(hour), minute: parseInt(minute) } };
-            } else if (hoveredCell) {
-              displayCell = hoveredCell;
-            }
-            
-            if (!displayCell) {
-              return (
-                <div className="bg-white rounded-lg border-2 border-gray1 p-4 shadow-lg">
-                  <div className="flex gap-4">
-                    <div className="flex-1">
-                      <div className="text-xs text-gray4 mb-2">가능</div>
-                      <div className="flex flex-col gap-1 min-h-[120px]">
-                        {/* 빈 공간 */}
-                      </div>
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-xs text-gray4 mb-2">불가능</div>
-                      <div className="flex flex-col gap-1 min-h-[120px]">
-                        {/* 빈 공간 */}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            }
-            
+          {hoveredCell ? (() => {
             const cell = scheduleData.cells.find(
               (c) =>
-                c.date === displayCell.date &&
-                c.timeSlot.hour === displayCell.timeSlot.hour &&
-                c.timeSlot.minute === displayCell.timeSlot.minute
+                c.date === hoveredCell.date &&
+                c.timeSlot.hour === hoveredCell.timeSlot.hour &&
+                c.timeSlot.minute === hoveredCell.timeSlot.minute
             );
             
             if (!cell) return null;
             
             const availableCount = cell.availableMembers?.length || 0;
-            const dateParts = displayCell.date.split(" ");
+            const dateParts = hoveredCell.date.split(" ");
             const dateNum = dateParts[0].split("/")[0]; // "9"
             const dayOfWeek = dateParts[1]; // "월"
-            const ampm = displayCell.timeSlot.hour < 12 ? "오전" : "오후";
-            const displayHour = displayCell.timeSlot.hour === 0 ? 12 : displayCell.timeSlot.hour > 12 ? displayCell.timeSlot.hour - 12 : displayCell.timeSlot.hour;
+            const ampm = hoveredCell.timeSlot.hour < 12 ? "오전" : "오후";
+            const displayHour = hoveredCell.timeSlot.hour === 0 ? 12 : hoveredCell.timeSlot.hour > 12 ? hoveredCell.timeSlot.hour - 12 : hoveredCell.timeSlot.hour;
             
             return (
-              <div className="bg-white rounded-lg border-2 p-4">
-                <div className="text-sm text-black1 mb-2">
+              <div className="bg-white rounded-lg border border-gray1 p-4 relative">
+                {/* 위쪽 연한 녹색 줄 */}
+                <div className="absolute top-0 left-0 right-0 h-1 bg-[#CAE8BD] rounded-t-lg"></div>
+                <div className="text-base font-semibold text-black1 mb-2 mt-1">
                   {availableCount}/{cell.maxMembers}명 가능
                 </div>
                 <div className="text-xs text-gray4 mb-4">
-                  2025년 9월 {dateNum}일 ({dayOfWeek}) {ampm} {displayHour}:{String(displayCell.timeSlot.minute).padStart(2, "0")}
+                  2025년 9월 {dateNum}일 ({dayOfWeek}) {ampm} {displayHour}:{String(hoveredCell.timeSlot.minute).padStart(2, "0")}
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-1">
@@ -257,7 +205,26 @@ export default function SchedulePage() {
                 </div>
               </div>
             );
-          })()}
+          })() : (
+            <div className="bg-white rounded-lg border border-gray1 p-4 relative">
+              {/* 위쪽 연한 녹색 줄 */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-[#CAE8BD] rounded-t-lg"></div>
+              <div className="flex gap-4 mt-1">
+                <div className="flex-1">
+                  <div className="text-xs text-gray4 mb-2">가능</div>
+                  <div className="flex flex-col gap-1 min-h-[120px]">
+                    {/* 빈 공간 */}
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <div className="text-xs text-gray4 mb-2">불가능</div>
+                  <div className="flex flex-col gap-1 min-h-[120px]">
+                    {/* 빈 공간 */}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

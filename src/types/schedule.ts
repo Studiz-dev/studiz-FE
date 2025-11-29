@@ -6,9 +6,7 @@ export interface TimeSlot {
 export interface ScheduleMember {
   id: number;
   name: string;
-  // 각 멤버의 시간대별 가능 여부: { "날짜": { "시간": 가능여부 } }
-  // 예: { "9/1 월": { "9": true, "10": false, ... } }
-  availability?: Record<string, Record<number, boolean>>;
+  availability?: Record<string, Record<number, boolean>>; // 날짜별, 시간별 가능 여부
 }
 
 export interface ScheduleCell {
