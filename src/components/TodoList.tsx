@@ -1,13 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import {
-  todoGroups as initialTodoGroups,
-  type TodoGroup,
-} from "../mock/scheduleTodoData";
+import { todoGroups as initialTodoGroups } from "../mock/scheduleTodoData";
+import type { TodoGroup } from "../types/todo";
 
 import CheckBox from "../assets/CheckBox.svg?react";
 
 export default function TodoList() {
+  const navigate = useNavigate();
   const [todoGroups, setTodoGroups] = useState<TodoGroup[]>(initialTodoGroups);
 
   const handleCheckToggle = (groupId: number, todoId: number) => {
@@ -31,7 +31,12 @@ export default function TodoList() {
 
   return (
     <section className="bg-white rounded-xl border-[1.5px] border-main3 p-4">
-      <h2 className="text-[18px] font-bold font-black1 mb-4">To-Do</h2>
+      <h2 
+        className="text-[18px] font-bold font-black1 mb-4 cursor-pointer"
+        onClick={() => navigate("/ToDo")}
+      >
+        To-Do
+      </h2>
 
       {todoGroups.map((group) => (
         <div key={group.id} className="mb-4">

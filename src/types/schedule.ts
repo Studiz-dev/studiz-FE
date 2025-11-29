@@ -1,7 +1,32 @@
-export interface ScheduleItem {
+export interface TimeSlot {
+  hour: number;
+  minute: number;
+}
+
+export interface ScheduleMember {
   id: number;
-  groupName: string;
-  studyName: string;
-  dateTime: string;
-  dDay: string;
+  name: string;
+  // 각 멤버의 시간대별 가능 여부: { "날짜": { "시간": 가능여부 } }
+  // 예: { "9/1 월": { "9": true, "10": false, ... } }
+  availability?: Record<string, Record<number, boolean>>;
+}
+
+export interface ScheduleCell {
+  date: string; // "9/1 월" 형식
+  timeSlot: TimeSlot;
+  registeredMembers: number; // 해당 시간대에 등록한 멤버 수
+  maxMembers: number; // 최대 인원
+  isSelected?: boolean; // 현재 사용자가 선택했는지
+  availableMembers?: ScheduleMember[]; // 가능한 멤버 목록
+  unavailableMembers?: ScheduleMember[]; // 불가능한 멤버 목록
+}
+
+export interface ScheduleData {
+  id: number;
+  location: string; // "융복합관 B101"
+  studyName: string; // "진탐 스터디"
+  dates: string[]; // ["9/1 월", "9/2 화", ...]
+  timeSlots: TimeSlot[]; // 시간대 목록
+  maxMembers: number; // 최대 인원
+  cells: ScheduleCell[]; // 모든 셀 데이터
 }
