@@ -45,7 +45,7 @@ export default function ScheduleEditPage() {
 
   return (
     <div className="flex flex-col h-full bg-white relative">
-      <Header title="시간 등록/수정하기" backPath="/Schedule" showBorder={false} />
+      <Header title="시간 등록/수정하기" backPath="/Schedule"/>
       
       <div className="flex-1 overflow-y-auto px-4 pt-6 pb-24">
         {/* 날짜 선택 */}

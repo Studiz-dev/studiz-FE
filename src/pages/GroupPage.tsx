@@ -9,7 +9,6 @@ import SuccessModal from "../components/SuccessModal.tsx";
 import type { StudyGroup, SortOrder } from "../types/group";
 import { findGroupByCode } from "../mock/groupData";
 import Plus from "../assets/plus.svg?react";
-import Header from "../components/Header";
 
 
 export default function GroupPage() {
