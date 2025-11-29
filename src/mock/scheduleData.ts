@@ -143,6 +143,7 @@ export const mockScheduleData: ScheduleData = {
   month: 9,
   dates,
   timeSlots,
+  timeRange: { startHour: 9, endHour: 23 }, // 방장이 설정한 시간 범위 (9시부터 23시까지)
   maxMembers,
   cells: generateCells(dates, timeSlots, maxMembers, allMembers),
 };

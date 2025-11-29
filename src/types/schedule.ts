@@ -35,6 +35,7 @@ export interface ScheduleData {
   month: number; // 월 (예: 9)
   dates: string[]; // ["9/1 월", "9/2 화", ...]
   timeSlots: TimeSlot[]; // 시간대 목록
+  timeRange: { startHour: number; endHour: number }; // 방장이 설정한 시간 범위
   maxMembers: number; // 최대 인원
   cells: ScheduleCell[]; // 모든 셀 데이터
 }
