@@ -23,7 +23,7 @@ export default function ToDoPage() {
     // 여기서 실제로는 API 호출하여 서버에 제출
     console.log("File:", file);
     console.log("Comment:", comment);
-    
+
     // 완료 모달 닫고 성공 모달 열기
     setShowCompleteModal(false);
     setShowSuccessModal(true);
@@ -57,8 +57,8 @@ export default function ToDoPage() {
 
   return (
     <div className="flex flex-col h-full bg-white relative">
-      <Header title="To-Do" backPath="/Home" showBorder={false} />
-      
+      <Header title="To-Do" backPath="/GroupHome" />
+
       <div className="flex-1 overflow-y-auto px-4 pt-6 pb-32">
         {/* 그룹명 */}
         <div className="text-sm text-point font-medium mb-2">

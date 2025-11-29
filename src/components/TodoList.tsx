@@ -1,12 +1,7 @@
 import TodoItem from "./ToDoItem";
 import { todoGroups } from "../mock/scheduleTodoData";
 import { useNavigate } from "react-router-dom";
-
-import { todoGroups as initialTodoGroups } from "../mock/scheduleTodoData";
-import type { TodoGroup } from "../types/todo";
-import CheckBox from "../assets/CheckBox.svg?react";
 import Plus from "../assets/plus.svg?react";
-
 
 export default function TodoList() {
   const navigate = useNavigate();

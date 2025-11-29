@@ -1,3 +1,11 @@
+export interface ScheduleItem {
+  id: number;
+  location: string;
+  scheduleName: string;
+  dateTime: string;
+  dDay: number;
+}
+
 export interface TimeSlot {
   hour: number;
   minute: number;
