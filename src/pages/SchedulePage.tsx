@@ -6,7 +6,7 @@ import type { TimeSlot } from "../types/schedule";
 export default function SchedulePage() {
   const navigate = useNavigate();
   const [scheduleData] = useState(mockScheduleData);
-  const [hoveredCell, setHoveredCell] = useState<{ date: string; timeSlot: TimeSlot } | null>(null);
+  const [selectedCell, setSelectedCell] = useState<{ date: string; timeSlot: TimeSlot } | null>(null);
 
   // 셀 색상 계산 - 가능한 멤버 수에 따라 point 컬러 투명도 조절 (0%부터 100%)
   const getCellStyle = (availableCount: number, maxMembers: number) => {
@@ -49,18 +49,18 @@ export default function SchedulePage() {
         <div className="text-lg font-semibold text-black1">{scheduleData.studyName}</div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 pt-4 pb-24 relative">
+      <div className="flex-1 overflow-y-auto pt-4 pb-24 relative">
         {/* 시간 등록 현황 */}
-        <div className="mb-4">
-          <div className="text-sm text-black1 mb-2">
+        <div className="mb-4 px-4">
+          <div className="text-[16px] font-semibold text-black1 mb-2">
             시간 등록 현황
           </div>
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center justify-center gap-2 mt-2mb-2">
             <span className="text-sm text-black1">
               0/{scheduleData.maxMembers} 명 가능
             </span>
             {/* 진행률 바 - 가능한 멤버 수에 따라 point 컬러 투명도 조절 (멤버수 + 1개) */}
-            <div className="flex-1 flex gap-1">
+            <div className="flex gap-1">
               {Array.from({ length: scheduleData.maxMembers + 1 }).map((_, index) => {
                 // 0명부터 maxMembers명까지 (maxMembers + 1)칸: index는 0~maxMembers
                 // 각 세그먼트는 index / maxMembers 비율까지 채워져야 함
@@ -70,11 +70,16 @@ export default function SchedulePage() {
                 // 각 세그먼트의 투명도 계산: index / (maxMembers + 1)로 단계로 나눔
                 const segmentOpacity = index / (scheduleData.maxMembers + 1);
                 
+                // 인원수에 따라 세그먼트 너비 조정 (인원수가 많을수록 좁아짐)
+                // 기본 24px에서 인원수에 따라 조정, 최소 12px
+                const segmentWidth = scheduleData.maxMembers <= 6 ? 24 : Math.max(12, 144 / (scheduleData.maxMembers + 1));
+                
                 return (
                   <div
                     key={index}
-                    className="flex-1 h-2 rounded border border-gray-200"
+                    className="h-6 rounded border border-gray-200"
                     style={{
+                      width: `${segmentWidth}px`,
                       backgroundColor: isFilled
                         ? `rgba(94, 147, 108, ${segmentOpacity})` // point 컬러 (#5E936C) 투명도 적용
                         : "#EAEAEA", // 채워지지 않은 경우 회색
@@ -83,100 +88,123 @@ export default function SchedulePage() {
                 );
               })}
             </div>
-            <span className="text-sm text-black1">
+            <span className="text-[14px] text-black1">
               {scheduleData.maxMembers}/{scheduleData.maxMembers} 명 가능
             </span>
           </div>
         </div>
 
         {/* 스케줄 그리드 */}
-        <div className="overflow-x-auto relative">
-          <div className="inline-block min-w-full">
-            <table className="w-full border-collapse">
-              {/* 헤더 행 */}
-              <thead>
-                <tr>
-                  <th className="w-12 p-1 text-[10px] text-gray4 border border-gray1 bg-gray-50"></th>
-                  {scheduleData.dates.map((date) => (
-                    <th
-                      key={date}
-                      className="w-10 p-1 text-[10px] text-gray4 border border-gray1 bg-gray-50 text-center"
-                    >
-                      {date}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {scheduleData.timeSlots.map((timeSlot) => (
-                  <tr key={`${timeSlot.hour}-${timeSlot.minute}`}>
-                    {/* 시간 라벨 */}
-                    <td className="p-1 text-[10px] text-gray4 border border-gray1 bg-gray-50 text-center">
-                      {String(timeSlot.hour).padStart(2, "0")}:{String(timeSlot.minute).padStart(2, "0")}
-                    </td>
-                    {/* 각 날짜의 셀 */}
-                    {scheduleData.dates.map((date) => {
-                      const cell = scheduleData.cells.find(
-                        (c) =>
-                          c.date === date &&
-                          c.timeSlot.hour === timeSlot.hour &&
-                          c.timeSlot.minute === timeSlot.minute
-                      );
-                      if (!cell) return <td key={date} className="p-0.5 border border-gray1"></td>;
-                      
-                      const availableCount = cell.availableMembers?.length || 0;
-                      const cellStyle = getCellStyle(availableCount, cell.maxMembers);
-                      
-                      return (
-                        <td
-                          key={date}
-                          className="p-0.5 border border-gray1 cursor-pointer relative"
-                          style={cellStyle}
-                          onMouseEnter={() => setHoveredCell({ date, timeSlot })}
-                          onMouseLeave={() => setHoveredCell(null)}
-                        />
-                      );
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <div className="overflow-x-auto relative mt-8 pl-4">
+  <div className="inline-block">
+    <table className="border-collapse">
+      
+      {/* 날짜 헤더 */}
+      <thead>
+        <tr className="h-6">
+          <th className="w-16 bg-white"></th>
+          {scheduleData.dates.map((date) => (
+            <th
+              key={date}
+              className="text-center text-[12px] font-medium bg-white align-middle h-6"
+            >
+              <div className="flex flex-col justify-center h-full">
+                <span className="text-[12px]">{date.split(" ")[0]}</span>
+                <span className="text-[16px]">{date.split(" ")[1]}</span>
+              </div>
+            </th>
+          ))}
+        </tr>
+      </thead>
+
+      {/* 시간 + 셀 */}
+      <tbody>
+        {scheduleData.timeSlots.map((timeSlot) => (
+          <tr key={`${timeSlot.hour}-${timeSlot.minute}`} className="h-6">
+
+            {/* 시간 라벨 */}
+            <td className="bg-white text-center text-[12px] py-2">
+              {String(timeSlot.hour).padStart(2, "0")}:
+              {String(timeSlot.minute).padStart(2, "0")}
+            </td>
+
+            {/* 각 날짜의 셀 */}
+            {scheduleData.dates.map((date) => {
+              const cell = scheduleData.cells.find(
+                (c) =>
+                  c.date === date &&
+                  c.timeSlot.hour === timeSlot.hour &&
+                  c.timeSlot.minute === timeSlot.minute
+              );
+
+              const availableCount = cell?.availableMembers?.length || 0;
+              const cellStyle = getCellStyle(availableCount, cell?.maxMembers || scheduleData.maxMembers);
+
+              const isSelected = selectedCell?.date === date &&
+                selectedCell?.timeSlot.hour === timeSlot.hour &&
+                selectedCell?.timeSlot.minute === timeSlot.minute;
+
+              return (
+                <td
+                  key={date}
+                  className={`h-6 w-12 cursor-pointer border align-middle ${
+                    isSelected ? "border-black border-2" : "border-gray-200"
+                  }`}
+                  style={cellStyle}
+                  onClick={() => {
+                    // 같은 셀을 다시 클릭하면 선택 해제
+                    if (isSelected) {
+                      setSelectedCell(null);
+                    } else {
+                      setSelectedCell({ date, timeSlot });
+                    }
+                  }}
+                ></td>
+              );
+            })}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
+
 
         {/* 가능/불가능 정보 - 시간표 아래 고정 (항상 공간 차지) */}
-        <div className="mt-4 mb-4">
-          {hoveredCell ? (() => {
+        {selectedCell && (
+          <div className="relative flex flex-col items-center justify-center h-[60px] bg-white border-b-[1.5px] border-main4 mt-4"></div>
+        )}
+        <div className="mb-4">
+          {selectedCell ? (() => {
             const cell = scheduleData.cells.find(
               (c) =>
-                c.date === hoveredCell.date &&
-                c.timeSlot.hour === hoveredCell.timeSlot.hour &&
-                c.timeSlot.minute === hoveredCell.timeSlot.minute
+                c.date === selectedCell.date &&
+                c.timeSlot.hour === selectedCell.timeSlot.hour &&
+                c.timeSlot.minute === selectedCell.timeSlot.minute
             );
             
             if (!cell) return null;
             
             const availableCount = cell.availableMembers?.length || 0;
-            const dateParts = hoveredCell.date.split(" ");
+            const dateParts = selectedCell.date.split(" ");
             const dateNum = dateParts[0].split("/")[0]; // "9"
             const dayOfWeek = dateParts[1]; // "월"
-            const ampm = hoveredCell.timeSlot.hour < 12 ? "오전" : "오후";
-            const displayHour = hoveredCell.timeSlot.hour === 0 ? 12 : hoveredCell.timeSlot.hour > 12 ? hoveredCell.timeSlot.hour - 12 : hoveredCell.timeSlot.hour;
+            const ampm = selectedCell.timeSlot.hour < 12 ? "오전" : "오후";
+            const displayHour = selectedCell.timeSlot.hour === 0 ? 12 : selectedCell.timeSlot.hour > 12 ? selectedCell.timeSlot.hour - 12 : selectedCell.timeSlot.hour;
             
             return (
-              <div className="bg-white rounded-lg border border-gray1 p-4 relative">
+              <div className="bg-white p-4 relative">
                 {/* 위쪽 연한 녹색 줄 */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-[#CAE8BD] rounded-t-lg"></div>
-                <div className="text-base font-semibold text-black1 mb-2 mt-1">
+                <div className="text-[18px] font-semibold text-black1 mb-2 mt-1 text-center">
                   {availableCount}/{cell.maxMembers}명 가능
                 </div>
-                <div className="text-xs text-gray4 mb-4">
-                  2025년 9월 {dateNum}일 ({dayOfWeek}) {ampm} {displayHour}:{String(hoveredCell.timeSlot.minute).padStart(2, "0")}
+                <div className="text-[12px] text-gray4 mb-4 text-center">
+                  {scheduleData.year}년 {scheduleData.month}월 {dateNum}일 ({dayOfWeek}) {ampm} {displayHour}:{String(selectedCell.timeSlot.minute).padStart(2, "0")}
                 </div>
-                <div className="flex gap-4">
-                  <div className="flex-1">
-                    <div className="text-xs text-gray4 mb-2">가능</div>
-                    <div className="flex flex-col gap-1 min-h-[120px]">
+                <div className="flex justify-center gap-1">
+                  <div className="flex-1 max-w-[150px]">
+                    <div className="text-[16px] font-semibold text-gray4 mb-2 text-center">가능</div>
+                    <div className="flex flex-col gap-1 min-h-[120px] items-center">
                       {cell.availableMembers && cell.availableMembers.length > 0 ? (
                         cell.availableMembers.map((member) => (
                           <div key={member.id} className="text-sm text-black1">
@@ -188,9 +216,9 @@ export default function SchedulePage() {
                       )}
                     </div>
                   </div>
-                  <div className="flex-1">
-                    <div className="text-xs text-gray4 mb-2">불가능</div>
-                    <div className="flex flex-col gap-1 min-h-[120px]">
+                  <div className="flex-1 max-w-[150px]">
+                    <div className="text-[16px] font-semibold text-gray4 mb-2 text-center">불가능</div>
+                    <div className="flex flex-col gap-1 min-h-[120px] items-center">
                       {cell.unavailableMembers && cell.unavailableMembers.length > 0 ? (
                         cell.unavailableMembers.map((member) => (
                           <div key={member.id} className="text-sm text-black1">
@@ -205,31 +233,12 @@ export default function SchedulePage() {
                 </div>
               </div>
             );
-          })() : (
-            <div className="bg-white rounded-lg border border-gray1 p-4 relative">
-              {/* 위쪽 연한 녹색 줄 */}
-              <div className="absolute top-0 left-0 right-0 h-1 bg-[#CAE8BD] rounded-t-lg"></div>
-              <div className="flex gap-4 mt-1">
-                <div className="flex-1">
-                  <div className="text-xs text-gray4 mb-2">가능</div>
-                  <div className="flex flex-col gap-1 min-h-[120px]">
-                    {/* 빈 공간 */}
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <div className="text-xs text-gray4 mb-2">불가능</div>
-                  <div className="flex flex-col gap-1 min-h-[120px]">
-                    {/* 빈 공간 */}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          })() : null}
         </div>
       </div>
 
       {/* 하단 고정 버튼 */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white px-4 py-4 border-t border-gray1 z-50 max-w-[390px] mx-auto">
+      <div className="fixed bottom-0 left-0 right-0 bg-white px-4 py-4 z-50 max-w-[390px] mx-auto">
         <button
           type="button"
           onClick={() => navigate("/ScheduleEdit")}
