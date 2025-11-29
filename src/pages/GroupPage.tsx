@@ -45,10 +45,10 @@ export default function GroupPage() {
   );
 
   return (
-    // [수정 1] min-h-[844px]: 프레임 높이(844px)만큼 최소 높이를 잡아 배경 끊김 방지
-    <div className="flex flex-col min-h-[844px] bg-[#F9FFF6] relative">
-      
-      <Header title="나의 스터디그룹" showBack={false} />
+    <div className="relative flex flex-col h-[744px]">
+      <h1 className="text-lg font-semibold text-center mb-8 pt-[40px]">
+        나의 스터디그룹
+      </h1>
 
       {/* 컨텐츠 영역 */}
       <div className="flex-1 flex flex-col">
