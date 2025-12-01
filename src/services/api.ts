@@ -10,10 +10,10 @@ const api: AxiosInstance = axios.create({
 api.interceptors.request.use(
   (config) => {
     // Token 자동 삽입 (필요하면)
-    // const token = localStorage.getItem("accessToken");
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => Promise.reject(error)

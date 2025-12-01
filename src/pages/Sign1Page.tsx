@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import open from "../assets/open.svg";
 import close from "../assets/close.svg";
 import Header from "../components/Header";
-import { register } from "@/services/auth.service";
+import { register, login } from "@/services/auth.service";
 import type { RegisterRequest } from "@/types/auth";
 import { AxiosError } from "axios";
 
@@ -35,25 +35,37 @@ export default function Sign1Page() {
     const body: RegisterRequest = {
       loginId: id,
       password: pw,
-      name: "이름미정",
+      name: "이름미정", // 임시 이름
     };
 
     try {
       const res = await register(body);
       console.log("ID/PW 등록 성공", res);
+
+      // 1단계 성공 후 바로 로그인하여 토큰 획득
+      const loginRes = await login({ loginId: id, password: pw });
+      localStorage.setItem("accessToken", loginRes.accessToken);
+      console.log("자동 로그인 및 토큰 저장 성공");
+
+      // 성공 시, userId를 state로 전달하며 다음 페이지로 이동
       navigate("/sign2", { state: { userId: res.id } });
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.status === 409) {
-          setErrorId("[ERROR 409] 이미 사용 중인 아이디입니다.");
-          return;
+          setErrorId("이미 사용 중인 아이디입니다.");
+          return; // 여기서 함수 실행을 중단
         }
         if (error.response?.status === 400) {
+          // 서버에서 오는 유효성 검사 메시지를 표시할 수 있습니다.
+          // 예: setErrorId('아이디는 5자 이상이어야 합니다.');
+          setErrorId("아이디 또는 비밀번호 형식이 올바르지 않습니다.");
           console.log("[ERROR 400] ID/PW 유효성 검사 실패:", error.response.data);
-          return;
+          return; // 여기서 함수 실행을 중단
         }
       }
-      console.log("기타 오류:", error);
+      // 기타 예상치 못한 오류 처리
+      setErrorId("가입 중 알 수 없는 오류가 발생했습니다.");
+      console.error("기타 오류:", error);
     }
   };
 
