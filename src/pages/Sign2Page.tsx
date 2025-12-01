@@ -11,7 +11,7 @@ export default function Sign2Page() {
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
   const [image, setImage] = useState<string | null>(null);
-  // const [imageFile, setImageFile] = useState<File | null>(null); // 이미지 파일 상태
+  const [imageFile, setImageFile] = useState<File | null>(null); // 이미지 파일 상태
 
   const userId = location.state?.userId;
 
@@ -28,7 +28,7 @@ export default function Sign2Page() {
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // setImageFile(file);
+      setImageFile(file);
       setImage(URL.createObjectURL(file)); // 미리보기
     }
   };
@@ -46,7 +46,7 @@ export default function Sign2Page() {
     setNameError("");
 
     try {
-      await updateUser(userId, { name });
+      await updateUser(userId, { name, profileImage: imageFile });
       navigate("/done");
     } catch (error) {
       if (error instanceof AxiosError) {

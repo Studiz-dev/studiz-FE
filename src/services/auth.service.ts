@@ -21,10 +21,21 @@ export const updateUser = async (
   userId: number,
   data: UpdateUserRequest
 ) => {
-  // FormData를 사용하여 이미지와 다른 데이터를 함께 보낼 수 있습니다.
-  // 백엔드에서 이미지 처리를 안하므로 일단 이름만 보냅니다.
-  const res = await api.patch(`/users/${userId}`, data);
-  return res.data;
+  // If there is a profile image, use FormData. The backend might need to fix this endpoint for multipart.
+  if (data.profileImage) {
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("profileImage", data.profileImage);
+
+    // This request may still fail if the backend doesn't support multipart for this endpoint.
+    const res = await api.put(`/users/${userId}`, formData);
+    return res.data;
+  } else {
+    // If there is NO profile image, send as application/json.
+    // This is to test if the backend expects JSON for non-file updates.
+    const res = await api.patch(`/users/${userId}`, { name: data.name });
+    return res.data;
+  }
 };
 
 // 로그인

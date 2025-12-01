@@ -131,7 +131,7 @@ export default function MainPage() {
             )}
           </div>
 
-          <div className="px-4 mt-6">
+          <div className="mt-6">
             <ActionButton
               text="로그인"
               isDisabled={isDisabled}
