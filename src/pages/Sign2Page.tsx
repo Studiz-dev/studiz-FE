@@ -54,7 +54,8 @@ export default function Sign2Page() {
       }
 
       // 2. 이름과 (있다면) 이미지 URL을 업데이트한다
-      await updateUser(userId, {
+      // /users/me 엔드포인트 사용 (토큰 기반으로 현재 사용자 식별)
+      await updateUser({
         name,
         profileImageUrl,
       });

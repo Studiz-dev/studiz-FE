@@ -31,11 +31,12 @@ export interface LoginRequest {
 // 로그인 성공 응답 타입
 export interface LoginResponse {
   accessToken: string;
+  accessTokenExpiresIn: number;
   refreshToken: string;
-  tokenType: "Bearer";
-  user: {
-    id: number;
+  refreshTokenExpiresIn: number;
+  tokenType: string;
+  userId: number;
     loginId: string;
     name: string;
-  };
+  message: string;
 }
