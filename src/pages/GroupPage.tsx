@@ -1,6 +1,7 @@
 // src/pages/GroupPage.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AxiosError } from "axios";
 import book from "../assets/book.svg";
 import SortBottomSheet from "../components/SortBottomSheet.tsx";
 import AddGroupModal from "../components/AddGroupModal.tsx";
@@ -8,7 +9,7 @@ import JoinGroupModal from "../components/JoinGroupModal.tsx";
 import ActionMenu from "../components/ActionMenu.tsx";
 import SuccessModal from "../components/SuccessModal.tsx";
 import type { StudyGroup, SortOrder } from "../types/group";
-import { findGroupByCode } from "../mock/groupData";
+import { createStudy, getStudyByInviteCode } from "../services/study.service";
 import Plus from "../assets/plus.svg?react";
 
 
@@ -24,30 +25,58 @@ export default function GroupPage() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showJoinSuccessModal, setShowJoinSuccessModal] = useState(false);
   const [joinSuccessGroupName, setJoinSuccessGroupName] = useState("");
+  const [isJoining, setIsJoining] = useState(false);
+  const [joinError, setJoinError] = useState("");
 
   // 그룹 추가 콜백 (모달에서 호출됨)
-  const handleAddGroup = (data: {
+  const handleAddGroup = async (data: {
+    name: string;
     category: string;
-    title: string;
-    leader: string;
     totalMembers: number;
+    description: string;
   }) => {
-    const newGroup: StudyGroup = {
-      id: Date.now(),
-      category: data.category,
-      title: data.title,
-      leader: data.leader,
-      totalMembers: data.totalMembers,
-      currentMembers: 1,
-    };
-    setStudyGroups((prev) => [...prev, newGroup]);
-    setShowSuccessModal(true);
+    try {
+      const response = await createStudy({
+        name: data.name,
+        description: data.description,
+      });
+
+      // API 응답을 StudyGroup 형식으로 변환
+      const newGroup: StudyGroup = {
+        id: response.id, // UUID 그대로 사용
+        category: data.category, // 모달에서 입력받은 모임명
+        title: response.name,
+        leader: "나", // 생성자는 자동으로 스터디장
+        totalMembers: data.totalMembers, // 모달에서 입력받은 인원수
+        currentMembers: 1, // 생성자 포함
+        createdAt: response.createdAt, // 생성일시 저장 (정렬용)
+      };
+
+      setStudyGroups((prev) => [...prev, newGroup]);
+      setShowAddModal(false);
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error("스터디 생성 실패:", error);
+      alert("스터디 생성 중 오류가 발생했습니다.");
+    }
   };
 
-  // 정렬 적용된 배열
-  const sortedGroups = [...studyGroups].sort((a, b) =>
-    sortOrder === "최신순" ? b.id - a.id : a.id - b.id
-  );
+  // 정렬 적용된 배열 (createdAt 우선, 없으면 id 기준)
+  const sortedGroups = [...studyGroups].sort((a, b) => {
+    // createdAt이 있으면 사용, 없으면 id 기준
+    const aDate = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const bDate = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    
+    if (aDate !== 0 || bDate !== 0) {
+      // createdAt 기준 정렬
+      return sortOrder === "최신순" ? bDate - aDate : aDate - bDate;
+    } else {
+      // createdAt이 없으면 id 기준 정렬
+      return sortOrder === "최신순" 
+        ? b.id.localeCompare(a.id) 
+        : a.id.localeCompare(b.id);
+    }
+  });
 
   return (
     <div className="relative flex flex-col h-[744px]">
@@ -97,7 +126,7 @@ export default function GroupPage() {
                 {sortedGroups.map((group) => (
                   <div
                     key={group.id}
-                    onClick={() => navigate("/GroupHome")}
+                    onClick={() => navigate("/GroupHome", { state: { studyId: group.id } })}
                     className="bg-white rounded-[15px] p-3 border border-[1.5px] border-main2 shadow-sm w-full cursor-pointer hover:bg-gray-50 transition"
                   >
                     <div className="text-sm text-point font-medium">
@@ -165,45 +194,60 @@ export default function GroupPage() {
       <AddGroupModal
         open={showAddModal}
         onClose={() => setShowAddModal(false)}
-        onSubmit={(data: {
-          category: string;
-          title: string;
-          leader: string;
-          totalMembers: number;
-        }) => {
-          handleAddGroup(data);
-          setShowAddModal(false);
-        }}
+        onSubmit={handleAddGroup}
       />
 
       {/* 그룹 입장 모달 */}
       <JoinGroupModal
         open={showJoinModal}
-        onClose={() => setShowJoinModal(false)}
-        onSubmit={(code: string) => {
-          // mock data에서 가입 코드로 그룹 찾기
-          const foundGroup = findGroupByCode(code);
-          
-          if (!foundGroup) {
-            // 그룹을 찾지 못한 경우 (에러 처리)
-            alert("올바른 가입 코드를 입력해주세요.");
-            return;
-          }
-          
-          // 입장한 그룹 정보 생성 (currentMembers는 최소 2명)
-          const joinedGroup: StudyGroup = {
-            ...foundGroup,
-            currentMembers: Math.max(2, foundGroup.currentMembers + 1), // 최소 2명, 기존 인원 + 1
-          };
-          
-          // 그룹을 리스트에 추가
-          setStudyGroups((prev) => [...prev, joinedGroup]);
-          
-          // 성공 모달 표시
-          setJoinSuccessGroupName(joinedGroup.title);
+        onClose={() => {
           setShowJoinModal(false);
-          setShowJoinSuccessModal(true);
+          setJoinError("");
         }}
+        onSubmit={async (code: string) => {
+          setIsJoining(true);
+          setJoinError("");
+
+          try {
+            // API로 초대 코드로 스터디 정보 조회
+            const studyInfo = await getStudyByInviteCode(code);
+
+            // API 응답을 StudyGroup 형식으로 변환
+            const joinedGroup: StudyGroup = {
+              id: studyInfo.id, // UUID
+              category: "", // API 응답에 없음
+              title: studyInfo.name,
+              leader: "", // API 응답에 없음
+              totalMembers: 0, // API 응답에 없음
+              currentMembers: 1, // 가입한 사용자 포함
+              createdAt: studyInfo.createdAt, // 생성일시
+            };
+
+            // 그룹을 리스트에 추가
+            setStudyGroups((prev) => [...prev, joinedGroup]);
+
+            // 성공 모달 표시
+            setJoinSuccessGroupName(joinedGroup.title);
+            setShowJoinModal(false);
+            setShowJoinSuccessModal(true);
+          } catch (error) {
+            console.error("스터디 조회 실패:", error);
+            if (error instanceof AxiosError) {
+              const status = error.response?.status;
+              if (status === 404) {
+                setJoinError("존재하지 않는 초대코드입니다.");
+              } else {
+                setJoinError("스터디 정보 조회 중 오류가 발생했습니다.");
+              }
+            } else {
+              setJoinError("알 수 없는 오류가 발생했습니다.");
+            }
+          } finally {
+            setIsJoining(false);
+          }
+        }}
+        isLoading={isJoining}
+        error={joinError}
       />
 
       {/* 그룹 생성 성공 모달 */}
