@@ -71,7 +71,7 @@ export default function Sign1Page() {
             setErrorPw("비밀번호는 4자리 이상이어야 합니다.");
           } else {
             // 아이디 관련 에러
-            setErrorId(errorMessage || "아이디 또는 비밀번호 형식이 올바르지 않습니다.");
+            setErrorId(errorMessage || "아이디는 2자리 이상이어야 합니다.");
           }
           console.log("[ERROR 400] ID/PW 유효성 검사 실패:", error.response.data);
           return; // 여기서 함수 실행을 중단
