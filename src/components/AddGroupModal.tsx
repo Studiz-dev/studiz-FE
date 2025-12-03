@@ -5,10 +5,10 @@ interface AddGroupModalProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (data: {
+    name: string;
     category: string;
-    title: string;
-    leader: string;
     totalMembers: number;
+    description: string;
   }) => void;
 }
 
@@ -17,30 +17,29 @@ export default function AddGroupModal({
   onClose,
   onSubmit,
 }: AddGroupModalProps) {
+  const [name, setName] = useState("");
   const [category, setCategory] = useState("");
-  const [title, setTitle] = useState("");
-  const [leader, setLeader] = useState("");
   const [totalMembers, setTotalMembers] = useState("");
+  const [description, setDescription] = useState("");
   const [memberError, setMemberError] = useState("");
 
   // 모달 열릴 때마다 폼 초기화
   useEffect(() => {
     if (open) {
+      setName("");
       setCategory("");
-      setTitle("");
-      setLeader("");
       setTotalMembers("");
+      setDescription("");
       setMemberError("");
     }
   }, [open]);
 
   if (!open) return null;
 
-  // 모든 필드가 채워졌는지 확인
+  // 필수 필드 검증
   const isFormValid =
+    name.trim() !== "" &&
     category.trim() !== "" &&
-    title.trim() !== "" &&
-    leader.trim() !== "" &&
     totalMembers !== "" &&
     parseInt(totalMembers, 10) > 0;
 
@@ -48,13 +47,10 @@ export default function AddGroupModal({
     if (!isFormValid) return;
 
     onSubmit({
-      category,
-      title,
-      leader,
-      totalMembers: Math.min(
-        99,
-        Math.max(1, parseInt(totalMembers, 10) || 1),
-      ),
+      name: name.trim(),
+      category: category.trim(),
+      totalMembers: Math.min(99, Math.max(1, parseInt(totalMembers, 10) || 1)),
+      description: description.trim(),
     });
   };
 
@@ -105,8 +101,8 @@ export default function AddGroupModal({
           <div className="flex justify-center">
             <input
               type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               placeholder="스터디명을 입력해 주세요"
               className="w-[208px] h-[29px] rounded-[8px] border border-main1 bg-white px-4
                          outline-none text-sm placeholder:text-gray-400"
@@ -127,23 +123,6 @@ export default function AddGroupModal({
               placeholder="모임명을 입력해 주세요"
               className="w-[208px] h-[29px] rounded-[8px] border border-main1 bg-white px-4
                          outline-none text-sm placeholder:text-gray-400"
-            />
-          </div>
-        </div>
-
-        {/* 비밀번호 */}
-        <div className="mb-2 flex flex-col w-full">
-          <label className="block text-sm font-medium text-gray-800 mb-2 text-left">
-            비밀번호
-          </label>
-          <div className="flex justify-center">
-            <input
-              type="password"
-              value={leader}
-              onChange={(e) => setLeader(e.target.value)}
-              placeholder="비밀번호를 입력해 주세요"
-              className="w-[208px] h-[29px] rounded-[8px] border border-main1 bg-white px-4
-                         outline-none text-sm placeholder:text-gray-400 mb-2"
             />
           </div>
         </div>

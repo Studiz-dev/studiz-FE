@@ -3,7 +3,7 @@ import type { StudyGroup } from "../types/group";
 // 가입 코드로 그룹을 찾을 수 있는 mock 데이터
 export const mockGroups: Array<StudyGroup & { code: string }> = [
   {
-    id: 1,
+    id: "00000000-0000-0000-0000-000000000001", // UUID 형식
     category: "척척학사",
     title: "시프공부를하자",
     leader: "나영이",

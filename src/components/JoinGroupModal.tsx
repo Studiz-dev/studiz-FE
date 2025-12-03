@@ -4,13 +4,17 @@ import { useState, useEffect } from "react";
 interface JoinGroupModalProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (code: string) => void;
+  onSubmit: (code: string) => void | Promise<void>;
+  isLoading?: boolean;
+  error?: string;
 }
 
 export default function JoinGroupModal({
   open,
   onClose,
   onSubmit,
+  isLoading = false,
+  error,
 }: JoinGroupModalProps) {
   const [code, setCode] = useState("");
 
@@ -46,10 +50,10 @@ export default function JoinGroupModal({
 
       {/* 가운데 카드 모달 */}
       <div
-        className="fixed left-1/2 z-40 w-[232px] h-[200px] -translate-x-1/2
+        className="fixed left-1/2 z-40 w-[232px] -translate-x-1/2
                    rounded-[8px] bg-white px-3 py-3 shadow-[0_8px_24px_rgba(0,0,0,0.16)] flex flex-col"
         style={{
-          marginTop: "calc((100vh - 744px) / 2 + (744px - 200px) / 2)",
+          marginTop: "calc((100vh - 744px) / 2 + (744px - 240px) / 2)",
         }}
       >
         {/* 헤더 */}
@@ -83,10 +87,12 @@ export default function JoinGroupModal({
               value={code}
               onChange={(e) => setCode(e.target.value)}
               placeholder="가입 코드 입력"
+              disabled={isLoading}
               className="w-[208px] h-[29px] rounded-[8px] border border-main1 bg-white px-4
-                         outline-none text-sm placeholder:text-gray-400 text-center"
+                         outline-none text-sm placeholder:text-gray-400 text-center
+                         disabled:bg-gray-100 disabled:cursor-not-allowed"
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
+                if (e.key === "Enter" && !isLoading) {
                   handleSubmit();
                 }
               }}
@@ -94,19 +100,26 @@ export default function JoinGroupModal({
           </div>
         </div>
 
+        {/* 에러 메시지 */}
+        {error && (
+          <div className="mb-2 flex justify-center">
+            <p className="text-xs text-red-500 text-center">{error}</p>
+          </div>
+        )}
+
         {/* 입장하기 버튼 */}
         <div className="flex justify-center">
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={code.trim() === ""}
+            disabled={code.trim() === "" || isLoading}
             className={`w-[208px] h-[36px] rounded-[8px] text-white text-sm font-semibold transition ${
-              code.trim() !== ""
+              code.trim() !== "" && !isLoading
                 ? "bg-point hover:bg-[#4C6953] cursor-pointer"
                 : "bg-main2 cursor-not-allowed"
             }`}
           >
-            입장하기
+            {isLoading ? "조회 중..." : "입장하기"}
           </button>
         </div>
       </div>
