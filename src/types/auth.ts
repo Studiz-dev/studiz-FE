@@ -18,7 +18,7 @@ export interface RegisterResponse {
 // 사용자 정보 수정 요청 타입
 export interface UpdateUserRequest {
   name: string;
-  profileImage?: File | null;
+  profileImage?: string;
 }
 
 // 로그인 요청 타입

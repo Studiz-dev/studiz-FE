@@ -16,26 +16,22 @@ export const register = async (
   return res.data;
 };
 
+// 이미지 업로드 서비스
+export const uploadImage = async (file: File): Promise<string> => {
+  const formData = new FormData();
+  formData.append("file", file); // 백엔드에서 'file'이라는 키로 받을 것으로 가정
+
+  const res = await api.post<{ url:string }>("/files/upload", formData);
+  return res.data.url;
+};
+
 // 사용자 정보 수정 (이름, 프로필 사진 등)
 export const updateUser = async (
   userId: number,
-  data: UpdateUserRequest
+  data: Partial<UpdateUserRequest>
 ) => {
-  // If there is a profile image, use FormData. The backend might need to fix this endpoint for multipart.
-  if (data.profileImage) {
-    const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("profileImage", data.profileImage);
-
-    // This request may still fail if the backend doesn't support multipart for this endpoint.
-    const res = await api.put(`/users/${userId}`, formData);
-    return res.data;
-  } else {
-    // If there is NO profile image, send as application/json.
-    // This is to test if the backend expects JSON for non-file updates.
-    const res = await api.patch(`/users/${userId}`, { name: data.name });
-    return res.data;
-  }
+  const res = await api.patch(`/users/${userId}`, data);
+  return res.data;
 };
 
 // 로그인

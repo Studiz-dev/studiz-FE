@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
-import { updateUser } from "@/services/auth.service";
+import { uploadImage, updateUser } from "@/services/auth.service";
 import edit from "../assets/edit.svg";
 import Header from "../components/Header";
 
@@ -40,25 +40,39 @@ export default function Sign2Page() {
     // 이름 유효성 검사 (2-50자)
     if (name.trim().length < 2 || name.trim().length > 50) {
       setNameError("2-50자의 이름을 입력하세요.");
-      console.log("유효하지 않다");
       return;
     }
     setNameError("");
 
     try {
-      await updateUser(userId, { name, profileImage: imageFile });
+      let profileImageUrl: string | undefined = undefined;
+
+      // 1. 이미지가 선택되었으면 업로드하고 URL을 받는다
+      if (imageFile) {
+        // TODO: 업로드 중 로딩 상태 표시
+        profileImageUrl = await uploadImage(imageFile);
+      }
+
+      // 2. 이름과 (있다면) 이미지 URL을 업데이트한다
+      await updateUser(userId, {
+        name,
+        profileImage: profileImageUrl,
+      });
+
       navigate("/done");
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.status === 400) {
-          console.log("[ERROR 400] 이름 유효성 검사 실패:", error.response.data);
-          // 백엔드에서 오는 특정 메시지가 있다면 여기서 setNameError로 설정 가능
-          setNameError("이름이 유효하지 않습니다. (서버오류)");
+          console.log(
+            "[ERROR 400] 요청 데이터 유효성 검사 실패:",
+            error.response.data
+          );
+          setNameError("입력한 정보가 유효하지 않습니다. (서버오류)");
           return;
         }
       }
-      console.error("⚠ 이름 업데이트 실패:", error);
-      setNameError("이름 업데이트 중 오류가 발생했습니다.");
+      console.error("⚠ 이름/프로필 업데이트 실패:", error);
+      setNameError("업데이트 중 오류가 발생했습니다.");
     }
   };
 
