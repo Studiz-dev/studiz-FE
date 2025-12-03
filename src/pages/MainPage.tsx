@@ -34,7 +34,7 @@ export default function MainPage() {
 
       // 3. 홈페이지로 이동
       navigate("/home");
-      
+
     } catch (error) {
       if (error instanceof AxiosError) {
         const status = error.response?.status;
@@ -44,6 +44,9 @@ export default function MainPage() {
         } else if (status === 404) {
           console.error("[ERROR 404] 존재하지 않는 아이디입니다.");
           setLoginError("아이디 또는 비밀번호가 일치하지 않습니다.");
+        } else if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
+          console.error("[ERROR] 네트워크 오류:", error);
+          setLoginError("서버에 연결할 수 없습니다. 서버가 실행 중인지 확인해주세요.");
         } else {
           console.error("로그인 실패:", error);
           setLoginError("로그인 중 오류가 발생했습니다. 나중에 다시 시도해주세요.");

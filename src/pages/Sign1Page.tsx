@@ -19,11 +19,17 @@ export default function Sign1Page() {
   const [errorId, setErrorId] = useState("");
 
   const isDisabled =
-    id.trim() === "" || pw.trim() === "" || pwc.trim() === "" || pw !== pwc;
+    id.trim() === "" || pw.trim() === "" || pwc.trim() === "" || pw !== pwc || pw.length < 4;
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isDisabled) return;
+
+    // 비밀번호 길이 검증
+    if (pw.length < 4) {
+      setErrorPw("비밀번호는 4자리 이상이어야 합니다.");
+      return;
+    }
 
     if (pw !== pwc) {
       setErrorPw("비밀번호가 일치하지 않습니다.");
@@ -56,9 +62,17 @@ export default function Sign1Page() {
           return; // 여기서 함수 실행을 중단
         }
         if (error.response?.status === 400) {
-          // 서버에서 오는 유효성 검사 메시지를 표시할 수 있습니다.
-          // 예: setErrorId('아이디는 5자 이상이어야 합니다.');
-          setErrorId("아이디 또는 비밀번호 형식이 올바르지 않습니다.");
+          // 서버에서 오는 유효성 검사 메시지 확인
+          const errorData = error.response.data;
+          const errorMessage = errorData?.message || errorData?.error || "";
+          
+          // 비밀번호 관련 에러인지 확인
+          if (errorMessage.includes("비밀번호") || errorMessage.includes("password") || errorMessage.includes("4자")) {
+            setErrorPw("비밀번호는 4자리 이상이어야 합니다.");
+          } else {
+            // 아이디 관련 에러
+            setErrorId(errorMessage || "아이디는 2자리 이상이어야 합니다.");
+          }
           console.log("[ERROR 400] ID/PW 유효성 검사 실패:", error.response.data);
           return; // 여기서 함수 실행을 중단
         }
@@ -124,8 +138,16 @@ export default function Sign1Page() {
             type={show ? "text" : "password"}
             value={pw}
             onChange={(e) => {
-              setPw(e.target.value);
-              setErrorPw("");
+              const newPw = e.target.value;
+              setPw(newPw);
+              // 비밀번호 길이 검증
+              if (newPw.length > 0 && newPw.length < 4) {
+                setErrorPw("비밀번호는 4자리 이상이어야 합니다.");
+              } else if (pwc && newPw !== pwc) {
+                setErrorPw("비밀번호가 일치하지 않습니다.");
+              } else {
+                setErrorPw("");
+              }
             }}
             className="flex-1 bg-transparent outline-none font-normal tracking-wider placeholder:text-[#505050] transition"
             placeholder="비밀번호를 입력해주세요."

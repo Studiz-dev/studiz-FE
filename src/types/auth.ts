@@ -5,6 +5,7 @@ export interface RegisterRequest {
   loginId: string;
   password: string;
   name: string;
+  profileImageUrl?: string;
 }
 
 // 회원가입 성공 응답 타입
@@ -18,7 +19,7 @@ export interface RegisterResponse {
 // 사용자 정보 수정 요청 타입
 export interface UpdateUserRequest {
   name: string;
-  profileImage?: string;
+  profileImageUrl?: string;
 }
 
 // 로그인 요청 타입
@@ -30,11 +31,12 @@ export interface LoginRequest {
 // 로그인 성공 응답 타입
 export interface LoginResponse {
   accessToken: string;
+  accessTokenExpiresIn: number;
   refreshToken: string;
-  tokenType: "Bearer";
-  user: {
-    id: number;
+  refreshTokenExpiresIn: number;
+  tokenType: string;
+  userId: number;
     loginId: string;
     name: string;
-  };
+  message: string;
 }
