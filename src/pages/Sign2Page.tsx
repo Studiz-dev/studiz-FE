@@ -56,7 +56,7 @@ export default function Sign2Page() {
       // 2. 이름과 (있다면) 이미지 URL을 업데이트한다
       await updateUser(userId, {
         name,
-        profileImage: profileImageUrl,
+        profileImageUrl,
       });
 
       navigate("/done");
