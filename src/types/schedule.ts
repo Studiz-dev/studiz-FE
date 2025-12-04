@@ -1,10 +1,12 @@
 export interface ScheduleItem {
-  id: number;
-  location: string;
-  scheduleName: string;
-  dateTime: string;
-  dDay: number;
+  id: string; // API 응답에 맞춰 string (UUID)
+  title: string; // 일정 이름
+  location?: string; // 장소 (선택사항)
+  scheduleTime?: string; // YYYY M DD HH:mm 형식 (확정된 일정만)
+  dday?: number; // 오늘 기준 남은 일수 (확정된 일정만)
 }
+
+export type GetSchedulesResponse = ScheduleItem[]; // GetSchedulesResponse는 ScheduleItem의 배열
 
 export interface TimeSlot {
   hour: number;
@@ -39,3 +41,15 @@ export interface ScheduleData {
   maxMembers: number; // 최대 인원
   cells: ScheduleCell[]; // 모든 셀 데이터
 }
+
+export interface CreateScheduleRequest {
+  title: string;
+  startDate: string; // "YYYY-MM-DD"
+  location?: string;
+}
+
+export interface CreateScheduleResponse {
+  id: number; // The ID of the newly created schedule
+}
+
+

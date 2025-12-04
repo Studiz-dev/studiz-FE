@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import type { Member } from "../types/member";
 import Right from "../assets/right.svg?react";
 
@@ -6,15 +5,15 @@ interface MemberHeaderProps {
     members: Member[];               // 전체 멤버 리스트
     currentMembers: number;          // 현재 인원
     totalMembers: number;            // 전체 인원
+    onViewAllClick: () => void;      // "전체보기" 클릭 시 호출될 콜백 함수
 }
 
-export default function GroupMemberButton({
+export default function MemberHeader({
     members,
     currentMembers,
     totalMembers,
+    onViewAllClick,
 }: MemberHeaderProps) {
-    const navigate = useNavigate();
-
     const displayMembers = members.slice(0, 3);
 
     return (
@@ -36,7 +35,7 @@ export default function GroupMemberButton({
                 </div>
             </div>
             <button
-                onClick={() => navigate("/Member")} className="text-[14px] text-point font-medium flex items-center">
+                onClick={onViewAllClick} className="text-[14px] text-point font-medium flex items-center">
                 전체보기
                 <Right />
             </button>
