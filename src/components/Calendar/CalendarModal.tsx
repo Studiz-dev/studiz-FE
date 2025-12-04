@@ -1,9 +1,11 @@
-// src/components/Calendar/CalendarScheduleModal.tsx
+import type { DailySchedule } from "../../types/calender";
 
-interface CalendarScheduleModalProps {
+interface CalendarModalProps {
   open: boolean;
   date: Date | null;
-  schedules?: { id: string; title: string }[];
+  schedules: DailySchedule[]; // Updated to DailySchedule[]
+  loading: boolean; // Added loading prop
+  error: string | null; // Added error prop
   onClose: () => void;
 }
 
@@ -11,15 +13,49 @@ export default function CalendarModal({
   open,
   date,
   schedules = [],
+  loading,
+  error,
   onClose,
-}: CalendarScheduleModalProps) {
-  if (!open || !date) return null;
+}: CalendarModalProps) {
+  if (!open) return null; // Only check 'open', allow date to be null for initial render safety
 
-  const handleClose = () => onClose();
+  const handleClose = () => {
+    onClose();
+  };
 
-  const dateLabel = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
+  const dateLabel = date ? `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일` : '';
 
-  const hasSchedule = schedules.length > 0;
+  let content;
+
+  if (loading) {
+    content = <p className="text-sm text-gray4 text-center">일정 로딩 중...</p>;
+  } else if (error) {
+    content = <p className="text-sm text-red-500 text-center">{error}</p>;
+  } else if (schedules.length === 0) {
+    content = <p className="text-sm text-gray4 text-center">일정이 없습니다.</p>;
+  } else {
+    content = (
+      <ul className="w-full flex flex-col gap-2">
+        {schedules.map((s, index) => {
+          // Extract HH:mm from "YYYY M DD HH:mm"
+          const timeMatch = s.scheduleTime ? s.scheduleTime.match(/(\d{1,2}:\d{2})/) : null;
+          const displayTime = timeMatch ? timeMatch[1] : '';
+
+          return (
+            <li
+              key={`${s.title}-${index}`} // Use a combination for key as no unique ID for schedule item
+              className="flex items-center justify-between text-sm text-gray-800 bg-gray-100 px-2 py-1 rounded-[6px]"
+            >
+              <span className="text-left text-point w-1/4">{displayTime}</span>
+              <span className="text-center flex-1 truncate">{s.title}</span>
+              <span className="w-1/4"></span> {/* Placeholder for alignment */}
+            </li>
+          );
+        })}
+      </ul>
+    );
+  }
+
 
   return (
     <>
@@ -46,20 +82,7 @@ export default function CalendarModal({
 
         {/* 내용 */}
         <div className="flex flex-col items-center justify-center gap-2 flex-1">
-          {hasSchedule ? (
-            <ul className="w-full flex flex-col gap-2">
-              {schedules.map((s) => (
-                <li
-                  key={s.id}
-                  className="text-sm text-gray-800 bg-gray-100 px-2 py-1 rounded-[6px]"
-                >
-                  {s.title}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-sm text-gray4 text-center">일정이 없습니다.</p>
-          )}
+          {content}
         </div>
 
         {/* 확인 버튼 */}

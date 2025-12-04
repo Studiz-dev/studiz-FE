@@ -5,6 +5,30 @@ export type ScheduleForCalendar = {
   title: string;
 };
 
+export interface CalendarDaySummary {
+  date: string; // "YYYY-MM-DD"
+  scheduleTitles: string[];
+}
+
+export interface GetCalendarSummaryResponse {
+  year: number;
+  month: number;
+  days: CalendarDaySummary[];
+}
+
+export interface DailySchedule {
+    title: string;
+    location?: string;
+    scheduleTime: string; // e.g., "2024 1 15 14:00"
+    dDay: number;
+}
+
+export interface GetDailySchedulesResponse {
+    date: string; // "YYYY-MM-DD"
+    schedules: DailySchedule[];
+}
+
+
 // "2025년 9월 19일 (금) 오후 00:00" → Date 객체로 변환
 function parseKoreanDate(str: string): Date {
   return new Date(
