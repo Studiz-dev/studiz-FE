@@ -36,20 +36,32 @@ export default function GroupPage() {
     description: string;
   }) => {
     try {
+      // 디버깅: 요청 전 데이터 확인
+      console.log("📤 보내는 데이터:", {
+        name: data.name,
+        meetingName: data.category ?? "", // undefined 방지
+        maxMembers: Number(data.totalMembers), // 숫자로 강제 변환
+        password: "1234",
+        description: data.description,
+      });
+
       const response = await createStudy({
         name: data.name,
+        meetingName: data.category ?? "", // undefined 방지
+        maxMembers: Number(data.totalMembers), // number 강제 변환
+        password: "1234",
         description: data.description,
       });
 
       // API 응답을 StudyGroup 형식으로 변환
       const newGroup: StudyGroup = {
-        id: response.id, // UUID 그대로 사용
-        category: data.category, // 모달에서 입력받은 모임명
-        title: response.name,
+        id: response.id, // UUID
+        category: data.category, // 사용자가 입력한 모임명 유지
+        title: response.name, // 백엔드 name 사용
         leader: "나", // 생성자는 자동으로 스터디장
-        totalMembers: data.totalMembers, // 모달에서 입력받은 인원수
+        totalMembers: response.maxMembers, // ⚠️ 서버 응답값 사용
         currentMembers: 1, // 생성자 포함
-        createdAt: response.createdAt, // 생성일시 저장 (정렬용)
+        createdAt: response.createdAt, // 백엔드 createdAt
       };
 
       setStudyGroups((prev) => [...prev, newGroup]);
@@ -60,6 +72,7 @@ export default function GroupPage() {
       alert("스터디 생성 중 오류가 발생했습니다.");
     }
   };
+  
 
   // 정렬 적용된 배열 (createdAt 우선, 없으면 id 기준)
   const sortedGroups = [...studyGroups].sort((a, b) => {
