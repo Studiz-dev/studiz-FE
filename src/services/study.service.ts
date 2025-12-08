@@ -8,15 +8,17 @@ import type {
 
 /**
  * 스터디 생성 API
- * @param data 스터디 생성 요청 데이터 (name, description)
+ * @param data 스터디 생성 요청 데이터 (name, meetingName, maxMembers, password, description)
  * @returns 생성된 스터디 정보
  */
 export async function createStudy(
   data: CreateStudyRequest
 ): Promise<CreateStudyResponse> {
+  console.log("📤 실제 요청 바디:", data);
   const response = await api.post<CreateStudyResponse>("/studies", data);
   return response.data;
 }
+
 
 /**
  * 초대 코드로 스터디 정보 조회 API

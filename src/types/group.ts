@@ -10,17 +10,22 @@ export interface StudyGroup {
 
 export type SortOrder = "최신순" | "오래된순";
 
-// API 응답 타입
+// API 요청 타입
 export interface CreateStudyRequest {
   name: string;
-  description: string;
+  meetingName: string;
+  maxMembers: number;
+  password: string;
+  description?: string;
 }
 
+// API 응답 타입
 export interface CreateStudyResponse {
   id: string;
   name: string;
   inviteCode: string;
-  description: string;
+  meetingName: string;
+  maxMembers: number;
   status: string;
   createdAt: string;
 }
